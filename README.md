@@ -133,3 +133,13 @@ You can embed the following [placeholders](https://code.visualstudio.com/docs/re
 **Problem:** Running heavy build or compile commands on every save can slow down your workspace and consume high CPU resources.
 
 **Solution:** Use the `exclude` property to ignore files in temporary directories (e.g., `**/tmp/**`), build folders (e.g., `**/dist/**`, `**/build/**`), or dependency folders (e.g., `**/node_modules/**`).
+
+---
+
+<p align="center">
+  <a href="https://deep.rent">
+  <img src=".github/assets/logo.svg" width=64 height=64 alt="deep.rent Logo">
+  </a>
+  </br>
+  <strong>deep.rent</strong>
+</p>
