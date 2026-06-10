@@ -9,12 +9,14 @@ on:
     paths-ignore:
       - 'README.md'
       - 'icon.png'
+      - '.vscode/**'
   pull_request:
     branches:
       - main
     paths-ignore:
       - 'README.md'
       - 'icon.png'
+      - '.vscode/**'
   workflow_dispatch:
 
 concurrency:
