@@ -1,6 +1,8 @@
 import type { Action } from './action';
 import type { Resource } from './resource';
 
+type Options = { cwd: string; shell?: string | undefined };
+
 /**
  * Encapsulates the execution command line and shell environment parameters.
  */
@@ -15,7 +17,7 @@ export class Command {
   constructor(
     public readonly name: string,
     public readonly commandLine: string,
-    public readonly options: { cwd: string; shell?: string | undefined },
+    public readonly options: Options,
   ) {}
 
   /**
@@ -26,8 +28,7 @@ export class Command {
    * @returns A new command instance.
    */
   public static create(action: Action, resource: Resource): Command {
-    const line = action.getCommand(resource);
-    return new Command(action.name, line, {
+    return new Command(action.name, action.getCommand(resource), {
       cwd: resource.workspaceFolder,
       shell: action.shell,
     });
