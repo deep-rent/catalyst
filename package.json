@@ -6,6 +6,7 @@
   "publisher": "deep-rent",
   "author": "deep.rent GmbH",
   "license": "MIT",
+  "icon": "icon.png",
   "keywords": [
     "vscode",
     "extension",
