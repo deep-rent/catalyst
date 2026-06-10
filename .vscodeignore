@@ -3,11 +3,7 @@
 !package.json
 !README.md
 !LICENSE
-!out/
-!out/**/*.js
-out/test/**
-!node_modules/
-!node_modules/**
+!dist/extension.js
 
 .DS_Store
 *.log

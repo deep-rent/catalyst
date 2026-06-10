@@ -1,7 +1,7 @@
 {
   "name": "catalyst",
   "displayName": "Catalyst",
-  "description": "Run commands automatically on file save in Visual Studio Code.",
+  "description": "Run commands automatically on file save",
   "version": "1.0.0",
   "publisher": "deep-rent",
   "author": "deep.rent GmbH",
@@ -36,7 +36,7 @@
   "activationEvents": [
     "onStartupFinished"
   ],
-  "main": "./out/extension.js",
+  "main": "./dist/extension.js",
   "contributes": {
     "configuration": {
       "title": "Catalyst",
@@ -92,14 +92,14 @@
     }
   },
   "scripts": {
-    "compile": "tsc -p ./",
+    "compile": "tsc -p ./ && esbuild src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node --target=node24 --sourcemap --minify-whitespace",
     "format:check": "prettier --check \"src/**/*.ts\"",
     "format": "prettier --write \"src/**/*.ts\"",
     "lint": "eslint src",
     "package": "npx @vscode/vsce package",
     "test": "node ./out/test/runTest.js",
-    "vscode:prepublish": "npm run compile",
-    "watch": "tsc -watch -p ./"
+    "vscode:prepublish": "tsc -p ./ && esbuild src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node --target=node24 --minify --sourcemap --minify-whitespace",
+    "watch": "esbuild src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node --target=node24 --sourcemap --minify-whitespace --watch"
   },
   "dependencies": {
     "minimatch": "10.2.x"
@@ -110,6 +110,7 @@
     "@types/node": "24.x",
     "@types/vscode": "1.107.x",
     "@vscode/test-electron": "3.0.x",
+    "esbuild": "0.28.0",
     "eslint": "10.4.x",
     "eslint-config-prettier": "10.1.x",
     "eslint-plugin-prettier": "5.5.x",
@@ -119,5 +120,8 @@
     "prettier": "3.8.x",
     "typescript": "6.0.x",
     "typescript-eslint": "8.61.x"
+  },
+  "allowScripts": {
+    "esbuild@0.28.0": true
   }
 }
