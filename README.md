@@ -6,8 +6,6 @@ Catalyst enables you to automate development workflows by executing shell comman
 
 ## Examples
 
-Add the following to your VS Code configurations:
-
 ### 1. Code Formatting with Prettier
 
 Automatically format TypeScript, JavaScript, and JSON files on save:
@@ -18,7 +16,8 @@ Automatically format TypeScript, JavaScript, and JSON files on save:
     {
       "name": "Prettier Format",
       "command": "npx prettier --write \"${file}\"",
-      "include": ["**/*.ts", "**/*.js", "**/*.json"]
+      "include": ["**/*.ts", "**/*.js", "**/*.json"],
+      "exclude": ["**/node_modules/**"]
     }
   ]
 }
