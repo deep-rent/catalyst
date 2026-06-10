@@ -23,7 +23,7 @@ Automatically format TypeScript, JavaScript, and JSON files on save:
 }
 ```
 
-### 2. Platform-Specific Action (e.g. Code Formatting with Gradle Spotless)
+### 2. Code Linting with Spotless Plugin for Gradle
 
 Run different Gradle scripts based on the active operating system to format the saved file:
 
@@ -43,7 +43,7 @@ Run different Gradle scripts based on the active operating system to format the 
 }
 ```
 
-### 3. Build & Test on Save
+### 3. Go Build & Test on Save
 
 Automatically compile and run tests in a Go project when code changes:
 
