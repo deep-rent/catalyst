@@ -57,7 +57,7 @@ class ShellExecutor implements Executor {
         `Running action '${cmd.name}': ${cmd.commandLine}`,
       );
 
-      const startTime = Date.now();
+      const startTime: number = Date.now();
 
       this.executeCallback(
         cmd.commandLine,
@@ -67,7 +67,7 @@ class ShellExecutor implements Executor {
           stdout: string | Buffer<ArrayBufferLike>,
           stderr: string | Buffer<ArrayBufferLike>,
         ) => {
-          const duration = Date.now() - startTime;
+          const duration: number = Date.now() - startTime;
 
           if (stdout) {
             logger.send(Level.info, `[${cmd.name} - stdout]:\n${stdout}`);
@@ -77,7 +77,7 @@ class ShellExecutor implements Executor {
           }
 
           if (error) {
-            const code = error.code || 'unknown';
+            const code: number = error.code ?? -1;
             logger.send(
               Level.error,
               `Action '${cmd.name}' failed with exit code ${code} ` +
@@ -85,11 +85,11 @@ class ShellExecutor implements Executor {
               error,
             );
 
-            const showErrorPopups = vscode.workspace
-              .getConfiguration(EXTENSION_NAME)
-              .get<boolean>('showErrorPopups', true);
-
-            if (showErrorPopups) {
+            if (
+              vscode.workspace
+                .getConfiguration(EXTENSION_NAME)
+                .get<boolean>('showErrorPopups', true)
+            ) {
               const button = 'Show Logs';
               this.showErrorMessageCallback(
                 `${logger.name}: Action '${cmd.name}' failed (code ${code}).`,
