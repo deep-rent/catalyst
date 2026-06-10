@@ -116,7 +116,7 @@
     "eslint-plugin-simple-import-sort": "13.0.x",
     "eslint-plugin-tsdoc": "0.5.x",
     "glob": "13.0.x",
-    "mocha": "11.3.x",
+    "mocha": "11.7.x",
     "prettier": "3.8.x",
     "typescript": "6.0.x",
     "typescript-eslint": "8.61.x"
