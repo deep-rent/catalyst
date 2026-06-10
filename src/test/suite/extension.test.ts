@@ -5,7 +5,7 @@ import * as vscode from 'vscode';
 describe('Extension', () => {
   it('is active after starting up', async () => {
     const extension: vscode.Extension<unknown> | undefined =
-      vscode.extensions.getExtension('deep.rent.catalyst');
+      vscode.extensions.getExtension('deep-rent.catalyst');
     assert.ok(extension);
 
     if (!extension.isActive) {
