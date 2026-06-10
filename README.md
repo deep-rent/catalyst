@@ -88,18 +88,18 @@ Each action object in `catalyst.actions` supports the following properties:
 
 ## Variable Substitution
 
-You can embed the following placeholders in your command strings:
+You can embed the following [placeholders](https://code.visualstudio.com/docs/reference/variables-reference) in your command strings:
 
-| Variable                     | Description                                  | Example Output                              |
-| :--------------------------- | :------------------------------------------- | :------------------------------------------ |
-| `${workspaceFolder}`         | Absolute path of the active workspace folder | `/Users/tarik/projects/my-app`              |
-| `${workspaceFolderBasename}` | The folder name of the workspace root        | `my-app`                                    |
-| `${file}`                    | Absolute path of the saved file              | `/Users/tarik/projects/my-app/src/index.ts` |
-| `${relativeFile}`            | Workspace-relative path of the saved file    | `src/index.ts`                              |
-| `${fileBasename}`            | Filename including extension                 | `index.ts`                                  |
-| `${fileBasenameNoExtension}` | Filename excluding extension                 | `index`                                     |
-| `${fileExtname}`             | File extension                               | `.ts`                                       |
-| `${fileDirname}`             | Absolute path of the saved file's directory  | `/Users/tarik/projects/my-app/src`          |
+| Variable                     | Description                                  | Example Output                             |
+| :--------------------------- | :------------------------------------------- | :----------------------------------------- |
+| `${workspaceFolder}`         | Absolute path of the active workspace folder | `/Users/alice/Code/my-app`                 |
+| `${workspaceFolderBasename}` | The folder name of the workspace root        | `my-app`                                   |
+| `${file}`                    | Absolute path of the saved file              | `/Users/alice/Code/my-app/src/config.json` |
+| `${relativeFile}`            | Workspace-relative path of the saved file    | `src/config.json`                          |
+| `${fileBasename}`            | Filename including extension                 | `config.json`                              |
+| `${fileBasenameNoExtension}` | Filename excluding extension                 | `config`                                   |
+| `${fileExtname}`             | Only the file extension                      | `.json`                                    |
+| `${fileDirname}`             | Absolute path of the saved file's directory  | `/Users/alice/Code/my-app/src`             |
 
 ## Troubleshooting
 
