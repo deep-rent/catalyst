@@ -1,4 +1,5 @@
-import { glob } from 'glob';
+import { glob } from 'node:fs/promises';
+
 import Mocha from 'mocha';
 import * as path from 'path';
 
@@ -11,7 +12,7 @@ export async function run(): Promise<void> {
 
     const root = path.resolve(__dirname, '..');
 
-    for (const file of await glob('**/**.test.js', { cwd: root })) {
+    for await (const file of glob('**/**.test.js', { cwd: root })) {
       mocha.addFile(path.resolve(root, file));
     }
 
