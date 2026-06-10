@@ -138,7 +138,7 @@ You can embed the following [placeholders](https://code.visualstudio.com/docs/re
 
 <p align="center">
   <a href="https://deep.rent">
-  <img src=".github/assets/logo.svg" width=64 height=64 alt="deep.rent Logo">
+  <img src="./logo.svg" width=64 height=64 alt="deep.rent Logo">
   </a>
   </br>
   <strong>deep.rent</strong>
