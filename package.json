@@ -29,7 +29,7 @@
     "url": "https://github.com/deep-rent/catalyst/issues"
   },
   "engines": {
-    "vscode": "^1.120.0",
+    "vscode": "^1.107.0",
     "node": ">=24.0.0"
   },
   "activationEvents": [
@@ -91,14 +91,13 @@
     }
   },
   "scripts": {
-    "vscode:prepublish": "npm run compile",
     "compile": "tsc -p ./",
-    "watch": "tsc -watch -p ./",
-    "pretest": "npm run compile && npm run lint",
-    "lint": "eslint src",
-    "format": "prettier --write \"src/**/*.ts\"",
     "format:check": "prettier --check \"src/**/*.ts\"",
-    "test": "node ./out/test/runTest.js"
+    "format": "prettier --write \"src/**/*.ts\"",
+    "lint": "eslint src",
+    "test": "node ./out/test/runTest.js",
+    "vscode:prepublish": "npm run compile",
+    "watch": "tsc -watch -p ./"
   },
   "dependencies": {
     "minimatch": "10.2.x"
@@ -107,7 +106,7 @@
     "@eslint/js": "10.0.x",
     "@types/mocha": "10.x",
     "@types/node": "24.x",
-    "@types/vscode": "1.120.x",
+    "@types/vscode": "1.107.x",
     "@vscode/test-electron": "3.0.x",
     "eslint": "10.4.x",
     "eslint-config-prettier": "10.1.x",
