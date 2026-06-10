@@ -1,0 +1,16 @@
+{
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "always"
+  },
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "editor.rulers": [80],
+  "search.exclude": {
+    "**/.vscode-test/**": true,
+    "**/*.lock": true,
+    "**/dist/**": true,
+    "**/node_modules/**": true,
+    "**/out/**": true,
+    "**/package-lock.json": true
+  }
+}
