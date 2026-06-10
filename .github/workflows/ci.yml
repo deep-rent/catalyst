@@ -10,12 +10,17 @@ on:
     branches:
       - main
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
 jobs:
   test:
     name: Lint and Test on ${{ matrix.os }}
+    timeout-minutes: 15
     strategy:
       fail-fast: false
       matrix:
@@ -50,7 +55,10 @@ jobs:
   publish:
     name: Package and Publish
     needs: test
+    timeout-minutes: 10
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -75,6 +83,13 @@ jobs:
         with:
           name: catalyst-extension
           path: '*.vsix'
+
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create ${{ github.ref_name }} --generate-notes *.vsix
 
       - name: Publish to VS Code Marketplace
         if: startsWith(github.ref, 'refs/tags/')
