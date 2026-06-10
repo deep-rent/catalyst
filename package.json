@@ -96,6 +96,7 @@
     "format:check": "prettier --check \"src/**/*.ts\"",
     "format": "prettier --write \"src/**/*.ts\"",
     "lint": "eslint src",
+    "package": "npx @vscode/vsce package",
     "test": "node ./out/test/runTest.js",
     "vscode:prepublish": "npm run compile",
     "watch": "tsc -watch -p ./"
