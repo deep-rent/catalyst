@@ -45,6 +45,9 @@ jobs:
           npm run lint
           npm run format:check
 
+      - name: Compile Extension
+        run: npm run compile
+
       - name: Run Tests (Linux)
         if: runner.os == 'Linux'
         run: xvfb-run -a npm test
