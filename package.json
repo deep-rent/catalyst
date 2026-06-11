@@ -1,6 +1,6 @@
 {
   "name": "catalyst-run-on-save",
-  "displayName": "Catalyst",
+  "displayName": "Catalyst - Run on Save",
   "description": "Run commands automatically on file save",
   "version": "1.0.0",
   "publisher": "deep-rent",
