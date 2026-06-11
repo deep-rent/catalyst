@@ -95,7 +95,7 @@ jobs:
       - name: Upload VSIX artifact
         uses: actions/upload-artifact@v7
         with:
-          name: catalyst-extension
+          name: catalyst-run-on-save
           path: '*.vsix'
 
       - name: Create GitHub Release
