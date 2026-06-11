@@ -1,6 +1,5 @@
 **
-!icon.png
-!logo.svg
+!assets/*.png
 !package.json
 !README.md
 !LICENSE
