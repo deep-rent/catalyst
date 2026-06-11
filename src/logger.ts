@@ -6,6 +6,8 @@
 import * as util from 'util';
 import * as vscode from 'vscode';
 
+import { EXTENSION_NAME } from './constants';
+
 /**
  * Specifies the severity level of a log message.
  */
@@ -73,4 +75,4 @@ export class Logger {
 /**
  * Shared logger singleton instance for the extension.
  */
-export const logger = new Logger('Catalyst');
+export const logger = new Logger(EXTENSION_NAME);

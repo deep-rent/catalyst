@@ -3,4 +3,4 @@
  * Licensed under the MIT License.
  */
 
-export const EXTENSION_NAME = 'catalyst';
+export const EXTENSION_NAME = 'catalyst-run-on-save';
