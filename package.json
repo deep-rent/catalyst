@@ -21,7 +21,7 @@
   "categories": [
     "Other"
   ],
-  "homepage": "https://marketplace.visualstudio.com/items?itemName=deep-rent.catalyst",
+  "homepage": "https://marketplace.visualstudio.com/items?itemName=deep-rent.catalyst-run-on-save",
   "repository": {
     "type": "git",
     "url": "https://github.com/deep-rent/catalyst.git"
