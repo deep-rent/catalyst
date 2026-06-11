@@ -92,14 +92,14 @@
     }
   },
   "scripts": {
-    "compile": "tsc -p ./ && esbuild src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node --target=node24 --sourcemap --minify-whitespace",
+    "compile": "tsc -p ./ && node esbuild.mjs",
     "format:check": "prettier --check \"src/**/*.ts\"",
     "format": "prettier --write \"src/**/*.ts\"",
     "lint": "eslint src",
     "package": "npx @vscode/vsce package",
     "test": "node ./out/test/runTest.js",
-    "vscode:prepublish": "tsc -p ./ && esbuild src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node --target=node24 --minify --sourcemap --minify-whitespace",
-    "watch": "esbuild src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node --target=node24 --sourcemap --minify-whitespace --watch"
+    "vscode:prepublish": "tsc -p ./ && node esbuild.mjs --production",
+    "watch": "node esbuild.mjs --watch"
   },
   "dependencies": {
     "minimatch": "10.2.x"
