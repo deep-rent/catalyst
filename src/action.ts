@@ -1,3 +1,8 @@
+/**
+ * Copyright (c) 2026 deep.rent GmbH (https://deep.rent).
+ * Licensed under the MIT License.
+ */
+
 import type { ActionConfig } from './config';
 import { Platform } from './config';
 import type { Matcher } from './matcher';

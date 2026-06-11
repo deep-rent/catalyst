@@ -1,4 +1,5 @@
 import eslint from '@eslint/js';
+import headers from 'eslint-plugin-headers';
 import prettier from 'eslint-plugin-prettier/recommended';
 import simpleImportSort from 'eslint-plugin-simple-import-sort';
 import tsdoc from 'eslint-plugin-tsdoc';
@@ -21,8 +22,23 @@ export default [
     plugins: {
       'simple-import-sort': simpleImportSort,
       tsdoc: tsdoc,
+      headers: headers,
     },
     rules: {
+      'headers/header-format': [
+        'error',
+        {
+          source: 'string',
+          style: 'jsdoc',
+          content:
+            'Copyright (c) {year} deep.rent GmbH (https://deep.rent).' +
+            '\nLicensed under the MIT License.',
+          trailingNewlines: 2,
+          variables: {
+            year: '2026',
+          },
+        },
+      ],
       '@typescript-eslint/naming-convention': 'warn',
       curly: 'warn',
       eqeqeq: 'warn',
