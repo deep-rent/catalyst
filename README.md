@@ -1,8 +1,8 @@
-# Catalyst
+# Catalyst &ndash; Run on Save
 
-Run commands automatically on file save in Visual Studio Code.
+Execute commands automatically on file save in Visual Studio Code.
 
-Catalyst enables you to automate development workflows by executing shell commands instantly whenever specific files are saved. Whether you need to run formatters, linters, code generators, tests, or build tasks, this extension handles it seamlessly in the background.
+Catalyst enables you to automate development workflows by executing shell commands instantly whenever specific files are saved. Whether you need to apply formatters, linters, code generators, tests, or build tasks, this extension handles it seamlessly in the background.
 
 ## Examples
 
