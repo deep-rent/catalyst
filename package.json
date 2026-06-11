@@ -97,6 +97,7 @@
     "format": "prettier --write \"src/**/*.ts\"",
     "lint": "eslint src",
     "package": "npx @vscode/vsce package",
+    "postversion": "git push && git push origin v$npm_package_version",
     "test": "node ./out/test/runTest.js",
     "vscode:prepublish": "tsc -p ./ && node esbuild.mjs --production",
     "watch": "node esbuild.mjs --watch"
