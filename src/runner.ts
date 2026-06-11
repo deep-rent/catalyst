@@ -1,3 +1,8 @@
+/**
+ * Copyright (c) 2026 deep.rent GmbH (https://deep.rent).
+ * Licensed under the MIT License.
+ */
+
 import type * as vscode from 'vscode';
 
 import type { Action } from './action';

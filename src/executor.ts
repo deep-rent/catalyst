@@ -1,3 +1,8 @@
+/**
+ * Copyright (c) 2026 deep.rent GmbH (https://deep.rent).
+ * Licensed under the MIT License.
+ */
+
 import * as cp from 'child_process';
 import * as vscode from 'vscode';
 
