@@ -12,5 +12,7 @@
     "**/node_modules/**": true,
     "**/out/**": true,
     "**/package-lock.json": true
-  }
+  },
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "typescript.tsdk": "node_modules/typescript/lib"
 }
