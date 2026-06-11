@@ -2,7 +2,7 @@
 
 Run commands automatically on file save in Visual Studio Code.
 
-Catalyst enables you to automate development workflows by executing shell commands instantly whenever specific files are saved. Whether you need to run formatters, linters, code-generators, tests, or build tasks, Catalyst handles it seamlessly in the background.
+Catalyst enables you to automate development workflows by executing shell commands instantly whenever specific files are saved. Whether you need to run formatters, linters, code generators, tests, or build tasks, this extension handles it seamlessly in the background.
 
 ## Examples
 
@@ -23,9 +23,26 @@ Automatically format TypeScript, JavaScript, and JSON files on save:
 }
 ```
 
-### 2. Code Linting with Spotless Plugin for Gradle
+### 2. Code Linting with ESLint
 
-Run different Gradle scripts based on the active operating system to format the saved file:
+Automatically fix linting issues in TypeScript and JavaScript files on save:
+
+```json
+{
+  "catalyst.actions": [
+    {
+      "name": "ESLint Fix",
+      "command": "npx eslint --fix \"${file}\"",
+      "include": ["**/*.ts", "**/*.js"],
+      "exclude": ["**/node_modules/**"]
+    }
+  ]
+}
+```
+
+### 3. Java & Kotlin Formatting with Spotless (Gradle)
+
+Run different Gradle scripts based on the active operating system to format Java and Kotlin files:
 
 ```json
 {
@@ -43,7 +60,7 @@ Run different Gradle scripts based on the active operating system to format the 
 }
 ```
 
-### 3. Go Build & Test on Save
+### 4. Go Build & Test on Save
 
 Automatically compile and run tests in a Go project when code changes:
 
@@ -77,14 +94,13 @@ Each action object in `catalyst.actions` supports the following properties:
 
 | Property  | Type                 | Required | Description                                                                                                                       |
 | :-------- | :------------------- | :------- | :-------------------------------------------------------------------------------------------------------------------------------- |
-| `command` | `string` or `object` | **Yes**  | The shell command to run. To use platform-specific commands, pass an object with keys: `windows`, `macos`, `linux`, or `default`. |
 | `name`    | `string`             | No       | A descriptive label for the action (used in logs and error notifications).                                                        |
+| `command` | `string` or `object` | **Yes**  | The shell command to run. To use platform-specific commands, pass an object with keys: `windows`, `macos`, `linux`, or `default`. |
 | `include` | `string[]`           | No       | Glob patterns indicating which files trigger the action. Matches all files if omitted.                                            |
 | `exclude` | `string[]`           | No       | Glob patterns to prevent matching files from triggering the action.                                                               |
-| `shell`   | `string`             | No       | Absolute path to a custom shell executable (e.g. `/bin/zsh`, `powershell.exe`).                                                   |
+| `shell`   | `string`             | No       | Absolute path to a custom shell executable (e.g., `/bin/zsh`, `powershell.exe`).                                                  |
 
-> [!NOTE]
-> Globs are evaluated relative to your workspace root directory. They support both standard file extension patterns (e.g. `**/*.ts`) and directory-specific exclusions.
+> **Note:** Globs are evaluated relative to your workspace root directory. They support both standard file extension patterns (e.g., `**/*.ts`) and directory-specific exclusions.
 
 ## Variable Substitution
 
@@ -138,8 +154,8 @@ You can embed the following [placeholders](https://code.visualstudio.com/docs/re
 
 <p align="center">
   <a href="https://deep.rent">
-  <img src="./assets/logo.png" width=64 height=64 alt="deep.rent Logo">
+    <img src="./assets/logo.png" width="64" height="64" alt="deep.rent Logo">
   </a>
-  </br>
+  <br>
   <strong>deep.rent</strong>
 </p>
