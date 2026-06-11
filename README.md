@@ -12,7 +12,7 @@ Automatically format TypeScript, JavaScript, and JSON files on save:
 
 ```json
 {
-  "catalyst.actions": [
+  "catalyst-run-on-save.actions": [
     {
       "name": "Prettier Format",
       "command": "npx prettier --write \"${file}\"",
@@ -29,7 +29,7 @@ Automatically fix linting issues in TypeScript and JavaScript files on save:
 
 ```json
 {
-  "catalyst.actions": [
+  "catalyst-run-on-save.actions": [
     {
       "name": "ESLint Fix",
       "command": "npx eslint --fix \"${file}\"",
@@ -46,7 +46,7 @@ Run different Gradle scripts based on the active operating system to format Java
 
 ```json
 {
-  "catalyst.actions": [
+  "catalyst-run-on-save.actions": [
     {
       "name": "Spotless Format (Gradle)",
       "command": {
@@ -66,7 +66,7 @@ Automatically compile and run tests in a Go project when code changes:
 
 ```json
 {
-  "catalyst.actions": [
+  "catalyst-run-on-save.actions": [
     {
       "name": "Build & Test Go Project",
       "command": "go build ./... && go test ./...",
@@ -83,14 +83,14 @@ Configure the extension inside your VS Code `settings.json` file.
 
 ### Settings
 
-| Setting                    | Type      | Default | Description                                                        |
-| :------------------------- | :-------- | :------ | :----------------------------------------------------------------- |
-| `catalyst.actions`         | `array`   | `[]`    | List of actions to execute on file save.                           |
-| `catalyst.showErrorPopups` | `boolean` | `true`  | Show notification popups if an action command exits with an error. |
+| Setting                                | Type      | Default | Description                                                        |
+| :------------------------------------- | :-------- | :------ | :----------------------------------------------------------------- |
+| `catalyst-run-on-save.actions`         | `array`   | `[]`    | List of actions to execute on file save.                           |
+| `catalyst-run-on-save.showErrorPopups` | `boolean` | `true`  | Show notification popups if an action command exits with an error. |
 
 ### Action Properties
 
-Each action object in `catalyst.actions` supports the following properties:
+Each action object in `catalyst-run-on-save.actions` supports the following properties:
 
 | Property  | Type                 | Required | Description                                                                                                                       |
 | :-------- | :------------------- | :------- | :-------------------------------------------------------------------------------------------------------------------------------- |

@@ -41,7 +41,7 @@
     "configuration": {
       "title": "Catalyst",
       "properties": {
-        "catalyst.actions": {
+        "catalyst-run-on-save.actions": {
           "type": "array",
           "default": [],
           "description": "List of actions to run on file save.",
@@ -83,7 +83,7 @@
             ]
           }
         },
-        "catalyst.showErrorPopups": {
+        "catalyst-run-on-save.showErrorPopups": {
           "type": "boolean",
           "default": true,
           "description": "Show an error message popup when an action fails."
