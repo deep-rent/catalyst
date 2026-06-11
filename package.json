@@ -2,7 +2,7 @@
   "name": "catalyst",
   "displayName": "Catalyst",
   "description": "Run commands automatically on file save",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "publisher": "deep-rent",
   "author": "deep.rent GmbH",
   "license": "MIT",
