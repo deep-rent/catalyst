@@ -8,15 +8,15 @@
   "license": "MIT",
   "icon": "assets/icon.png",
   "keywords": [
-    "vscode",
-    "extension",
-    "save",
-    "on-save",
-    "run",
+    "automation",
     "command",
     "execute",
+    "extension",
+    "on-save",
+    "run",
+    "save",
     "trigger",
-    "automation"
+    "vscode"
   ],
   "categories": [
     "Other"
