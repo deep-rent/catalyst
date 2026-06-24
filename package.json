@@ -109,7 +109,7 @@
     "@eslint/js": "10.0.x",
     "@types/mocha": "10.x",
     "@types/node": "24.x",
-    "@types/vscode": "1.107.x",
+    "@types/vscode": "1.125.x",
     "@vscode/test-electron": "3.0.x",
     "esbuild": "0.28.1",
     "eslint": "10.5.x",
