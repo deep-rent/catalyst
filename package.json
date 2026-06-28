@@ -112,7 +112,7 @@
     "@types/vscode": "1.107.x",
     "@vscode/test-electron": "3.0.x",
     "esbuild": "0.28.1",
-    "eslint": "10.5.x",
+    "eslint": "10.6.x",
     "eslint-config-prettier": "10.1.x",
     "eslint-plugin-headers": "1.3.x",
     "eslint-plugin-prettier": "5.5.x",
