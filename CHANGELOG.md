@@ -2,6 +2,16 @@
 
 All notable changes to the extension will be documented in this file.
 
+## [1.0.3] - 2026-06-28
+
+### Added
+
+- Created a changelog file for tracking changes in the extension.
+
+### Changed
+
+- Upgraded dependencies for internal housekeeping and build optimization.
+
 ## [1.0.2] - 2026-06-28
 
 ### Changed
