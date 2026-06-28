@@ -25,23 +25,24 @@ describe('Executor', () => {
     const executeCallback = (
       cmd: string,
       _opts: cp.SpawnOptions,
-    ): any => {
+    ): cp.ChildProcess => {
       executed = cmd;
-      const child = new EventEmitter();
-      (child as any).stdout = new EventEmitter();
-      (child as any).stderr = new EventEmitter();
+      const stdout = new EventEmitter();
+      const stderr = new EventEmitter();
+      const child = Object.assign(new EventEmitter(), {
+        stdout,
+        stderr,
+      }) as unknown as cp.ChildProcess;
 
       process.nextTick(() => {
-        (child as any).stdout.emit('data', Buffer.from('stdout'));
+        stdout.emit('data', Buffer.from('stdout'));
         child.emit('close', 0);
       });
 
       return child;
     };
 
-    const executor: Executor = createExecutor(
-      executeCallback as ExecuteCallback,
-    );
+    const executor: Executor = createExecutor(executeCallback);
     const action: Action = new Action({ command: 'echo success' });
     const resource: Resource = new Resource(vscode.Uri.file('/test'));
     const command: Command = Command.create(action, resource);
@@ -55,13 +56,16 @@ describe('Executor', () => {
     const executeCallback = (
       _cmd: string,
       _opts: cp.SpawnOptions,
-    ): any => {
-      const child = new EventEmitter();
-      (child as any).stdout = new EventEmitter();
-      (child as any).stderr = new EventEmitter();
+    ): cp.ChildProcess => {
+      const stdout = new EventEmitter();
+      const stderr = new EventEmitter();
+      const child = Object.assign(new EventEmitter(), {
+        stdout,
+        stderr,
+      }) as unknown as cp.ChildProcess;
 
       process.nextTick(() => {
-        (child as any).stderr.emit('data', Buffer.from('stderr'));
+        stderr.emit('data', Buffer.from('stderr'));
         child.emit('close', 1);
       });
 
