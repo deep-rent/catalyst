@@ -26,7 +26,10 @@ export interface Executor {
 /**
  * Type alias for the child process executor function.
  */
-export type ExecuteCallback = typeof cp.exec;
+export type ExecuteCallback = (
+  command: string,
+  options: cp.SpawnOptions,
+) => cp.ChildProcess;
 
 /**
  * Type alias for the error message dialog presenter function.
@@ -64,57 +67,99 @@ class ShellExecutor implements Executor {
 
       const startTime: number = Date.now();
 
-      this.executeCallback(
-        cmd.commandLine,
-        cmd.options,
-        (
-          error: cp.ExecException | null,
-          stdout: string | Buffer<ArrayBufferLike>,
-          stderr: string | Buffer<ArrayBufferLike>,
-        ) => {
-          const duration: number = Date.now() - startTime;
+      const child = this.executeCallback(cmd.commandLine, {
+        cwd: cmd.options.cwd,
+        shell: cmd.options.shell ?? true,
+      });
 
-          if (stdout) {
-            logger.send(Level.info, `[${cmd.name} - stdout]:\n${stdout}`);
-          }
-          if (stderr) {
-            logger.send(Level.error, `[${cmd.name} - stderr]:\n${stderr}`);
-          }
+      if (child.stdout) {
+        child.stdout.on('data', (data: Buffer | string) => {
+          logger.send(
+            Level.info,
+            `[${cmd.name} - stdout]:\n${data.toString().trimEnd()}`,
+          );
+        });
+      }
 
-          if (error) {
-            const code: number = error.code ?? -1;
-            logger.send(
-              Level.error,
-              `Action '${cmd.name}' failed with exit code ${code} ` +
-                `after ${duration}ms.`,
-              error,
-            );
+      if (child.stderr) {
+        child.stderr.on('data', (data: Buffer | string) => {
+          logger.send(
+            Level.error,
+            `[${cmd.name} - stderr]:\n${data.toString().trimEnd()}`,
+          );
+        });
+      }
 
-            if (
-              vscode.workspace
-                .getConfiguration(EXTENSION_NAME)
-                .get<boolean>('showErrorPopups', true)
-            ) {
-              const button = 'Show Logs';
-              this.showErrorMessageCallback(
-                `${logger.name}: Action '${cmd.name}' failed (code ${code}).`,
-                button,
-              ).then((selection) => {
-                if (selection === button) {
-                  logger.show();
-                }
-              });
+      let errorOccurred = false;
+
+      child.on('error', (error: Error & { code?: string | number }) => {
+        errorOccurred = true;
+        const duration: number = Date.now() - startTime;
+        const code = error.code ?? -1;
+
+        logger.send(
+          Level.error,
+          `Action '${cmd.name}' failed to spawn with code ${code} ` +
+            `after ${duration}ms.`,
+          error,
+        );
+
+        if (
+          vscode.workspace
+            .getConfiguration(EXTENSION_NAME)
+            .get<boolean>('showErrorPopups', true)
+        ) {
+          const button = 'Show Logs';
+          this.showErrorMessageCallback(
+            `${logger.name}: Action '${cmd.name}' failed (code ${code}).`,
+            button,
+          ).then((selection) => {
+            if (selection === button) {
+              logger.show();
             }
-          } else {
-            logger.send(
-              Level.info,
-              `Action '${cmd.name}' completed successfully in ${duration}ms.`,
-            );
-          }
+          });
+        }
+        resolve();
+      });
 
-          resolve();
-        },
-      );
+      child.on('close', (code: number | null) => {
+        if (errorOccurred) {
+          return;
+        }
+
+        const duration: number = Date.now() - startTime;
+
+        if (code !== 0) {
+          logger.send(
+            Level.error,
+            `Action '${cmd.name}' failed with exit code ${code} ` +
+              `after ${duration}ms.`,
+          );
+
+          if (
+            vscode.workspace
+              .getConfiguration(EXTENSION_NAME)
+              .get<boolean>('showErrorPopups', true)
+          ) {
+            const button = 'Show Logs';
+            this.showErrorMessageCallback(
+              `${logger.name}: Action '${cmd.name}' failed (code ${code}).`,
+              button,
+            ).then((selection) => {
+              if (selection === button) {
+                logger.show();
+              }
+            });
+          }
+        } else {
+          logger.send(
+            Level.info,
+            `Action '${cmd.name}' completed successfully in ${duration}ms.`,
+          );
+        }
+
+        resolve();
+      });
     });
   }
 }
@@ -130,7 +175,7 @@ class ShellExecutor implements Executor {
  * @returns A new executor instance.
  */
 export const createExecutor = (
-  executeCallback: ExecuteCallback = cp.exec,
+  executeCallback: ExecuteCallback = cp.spawn as ExecuteCallback,
   showErrorMessageCallback: ShowErrorMessageCallback = vscode.window
     .showErrorMessage,
 ): Executor => {

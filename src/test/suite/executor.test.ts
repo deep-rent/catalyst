@@ -4,6 +4,7 @@
  */
 
 import * as assert from 'node:assert';
+import { EventEmitter } from 'node:events';
 
 import type * as cp from 'child_process';
 import * as vscode from 'vscode';
@@ -23,15 +24,19 @@ describe('Executor', () => {
     let executed: string = '';
     const executeCallback = (
       cmd: string,
-      _opts: cp.ExecOptions,
-      cb: (
-        error: cp.ExecException | null,
-        stdout: string,
-        stderr: string,
-      ) => void,
-    ) => {
+      _opts: cp.SpawnOptions,
+    ): any => {
       executed = cmd;
-      cb(null, 'stdout', '');
+      const child = new EventEmitter();
+      (child as any).stdout = new EventEmitter();
+      (child as any).stderr = new EventEmitter();
+
+      process.nextTick(() => {
+        (child as any).stdout.emit('data', Buffer.from('stdout'));
+        child.emit('close', 0);
+      });
+
+      return child;
     };
 
     const executor: Executor = createExecutor(
@@ -49,16 +54,18 @@ describe('Executor', () => {
     let shown: boolean = false;
     const executeCallback = (
       _cmd: string,
-      _opts: cp.ExecOptions,
-      cb: (
-        error: cp.ExecException | null,
-        stdout: string,
-        stderr: string,
-      ) => void,
-    ) => {
-      const error = new Error('fail') as cp.ExecException;
-      error.code = 1;
-      cb(error, '', 'stderr');
+      _opts: cp.SpawnOptions,
+    ): any => {
+      const child = new EventEmitter();
+      (child as any).stdout = new EventEmitter();
+      (child as any).stderr = new EventEmitter();
+
+      process.nextTick(() => {
+        (child as any).stderr.emit('data', Buffer.from('stderr'));
+        child.emit('close', 1);
+      });
+
+      return child;
     };
 
     const showErrorMessageCallback: ShowErrorMessageCallback = async () => {
