@@ -2,6 +2,12 @@
 
 All notable changes to the extension will be documented in this file.
 
+## [1.0.6] - 2026-06-28
+
+### Changed
+
+- Improved performance by delegating raw logging output directly to VS Code's `OutputChannel.append()` without extra formatting.
+
 ## [1.0.5] - 2026-06-28
 
 ### Changed
