@@ -62,6 +62,18 @@ export class Logger {
   }
 
   /**
+   * Appends raw text to the output channel without formatting.
+   *
+   * @param text - The raw text to output.
+   */
+  public append(text: string): void {
+    if (this.channel === null) {
+      return;
+    }
+    this.channel.append(text);
+  }
+
+  /**
    * Reveals the output panel in the editor user interface.
    */
   public show(): void {

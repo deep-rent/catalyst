@@ -73,20 +73,16 @@ class ShellExecutor implements Executor {
       });
 
       if (child.stdout) {
+        logger.send(Level.info, `[${cmd.name} - stdout]:`);
         child.stdout.on('data', (data: Buffer | string) => {
-          logger.send(
-            Level.info,
-            `[${cmd.name} - stdout]:\n${data.toString().trimEnd()}`,
-          );
+          logger.append(data.toString());
         });
       }
 
       if (child.stderr) {
+        logger.send(Level.error, `[${cmd.name} - stderr]:`);
         child.stderr.on('data', (data: Buffer | string) => {
-          logger.send(
-            Level.error,
-            `[${cmd.name} - stderr]:\n${data.toString().trimEnd()}`,
-          );
+          logger.append(data.toString());
         });
       }
 
