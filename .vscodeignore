@@ -1,5 +1,6 @@
 **
 !assets/*.png
+!CHANGELOG.md
 !package.json
 !README.md
 !LICENSE
