@@ -6,4 +6,3 @@
 *.png    binary
 *.ts     text diff=ts eol=lf
 LICENSE  text
-*.png !text !filter !merge !diff

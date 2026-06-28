@@ -154,7 +154,7 @@ You can embed the following [placeholders](https://code.visualstudio.com/docs/re
 
 <p align="center">
   <a href="https://deep.rent">
-    <img src="./assets/logo.png" width="64" height="64" alt="deep.rent Logo">
+    <img src="./assets/company-logo.png" width="64" height="64" alt="deep.rent Logo">
   </a>
   <br>
   <strong>deep.rent</strong>
