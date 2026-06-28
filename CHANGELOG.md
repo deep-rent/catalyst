@@ -2,6 +2,12 @@
 
 All notable changes to the extension will be documented in this file.
 
+## [1.0.5] - 2026-06-28
+
+### Changed
+
+- Replaced `cp.exec` with streaming `cp.spawn` for real-time output logging.
+
 ## [1.0.4] - 2026-06-28
 
 ### Fixed
