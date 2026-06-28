@@ -39,6 +39,14 @@ export default [
           },
         },
       ],
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          caughtErrorsIgnorePattern: '^_',
+        },
+      ],
       '@typescript-eslint/naming-convention': 'warn',
       curly: 'warn',
       eqeqeq: 'warn',
