@@ -3,7 +3,8 @@
  * Licensed under the MIT License.
  */
 
-import * as util from 'util';
+import * as util from 'node:util';
+
 import * as vscode from 'vscode';
 
 import { EXTENSION_NAME } from './constants';

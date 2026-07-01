@@ -3,7 +3,8 @@
  * Licensed under the MIT License.
  */
 
-import * as cp from 'child_process';
+import * as cp from 'node:child_process';
+
 import * as vscode from 'vscode';
 
 import type { Command } from './command';
