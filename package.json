@@ -120,7 +120,7 @@
     "eslint-plugin-tsdoc": "0.5.x",
     "mocha": "11.7.x",
     "prettier": "3.9.x",
-    "typescript": "6.0.x",
+    "typescript": "7.0.x",
     "typescript-eslint": "8.64.x"
   },
   "allowScripts": {
