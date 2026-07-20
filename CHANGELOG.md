@@ -2,6 +2,12 @@
 
 All notable changes to the extension will be documented in this file.
 
+## [1.0.7] - 2026-07-20
+
+### Changed
+
+- Upgraded dependencies for internal housekeeping and build optimization.
+
 ## [1.0.6] - 2026-06-28
 
 ### Changed
