@@ -74,11 +74,11 @@ class ShellExecutor implements Executor {
       });
 
       let timeoutTimer: NodeJS.Timeout | undefined;
-      let timedOut = false;
+      let timeoutExceeded = false;
 
       if (cmd.options.timeout !== undefined && cmd.options.timeout > 0) {
         timeoutTimer = setTimeout(() => {
-          timedOut = true;
+          timeoutExceeded = true;
           child.kill('SIGTERM');
         }, cmd.options.timeout);
       }
@@ -145,7 +145,7 @@ class ShellExecutor implements Executor {
 
         const duration: number = Date.now() - startTime;
 
-        if (timedOut) {
+        if (timeoutExceeded) {
           logger.send(
             Level.error,
             `Action '${cmd.name}' timed out after ${cmd.options.timeout}ms.`,
