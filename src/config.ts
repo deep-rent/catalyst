@@ -36,6 +36,7 @@ export interface ActionConfig {
   readonly include?: string[] | undefined;
   readonly exclude?: string[] | undefined;
   readonly shell?: string | undefined;
+  readonly timeout?: number | undefined;
 }
 
 let cache: Action[] | undefined;

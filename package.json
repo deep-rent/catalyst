@@ -76,6 +76,10 @@
               "shell": {
                 "type": "string",
                 "description": "Path to the custom shell executable (e.g., /bin/bash, powershell.exe)."
+              },
+              "timeout": {
+                "type": "number",
+                "description": "Timeout in milliseconds after which the process is terminated."
               }
             },
             "required": [

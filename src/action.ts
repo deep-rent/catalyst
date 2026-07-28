@@ -28,6 +28,11 @@ export class Action {
   public readonly shell?: string | undefined;
 
   /**
+   * The optional execution timeout in milliseconds.
+   */
+  public readonly timeout?: number | undefined;
+
+  /**
    * Creates an action from the configuration and platform.
    *
    * @param config - The settings representing action parameters.
@@ -35,7 +40,7 @@ export class Action {
    * @throws {@link Error} If the command is missing or invalid.
    */
   constructor(config: ActionConfig, platform: Platform = getPlatform()) {
-    const { name, command, include, exclude, shell } = config;
+    const { name, command, include, exclude, shell, timeout } = config;
 
     this.name = name ?? 'Unknown';
     switch (typeof command) {
@@ -57,6 +62,8 @@ export class Action {
     this.include = createMatcher(include, true);
     this.exclude = createMatcher(exclude, false);
     this.shell = shell;
+    this.timeout =
+      typeof timeout === 'number' && timeout > 0 ? timeout : undefined;
   }
 
   /**

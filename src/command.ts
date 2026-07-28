@@ -6,7 +6,11 @@
 import type { Action } from './action';
 import type { Resource } from './resource';
 
-type Options = { cwd: string; shell?: string | undefined };
+type Options = {
+  cwd: string;
+  shell?: string | undefined;
+  timeout?: number | undefined;
+};
 
 /**
  * Encapsulates the execution command line and shell environment parameters.
@@ -36,6 +40,7 @@ export class Command {
     return new Command(action.name, action.getCommand(resource), {
       cwd: resource.workspaceFolder,
       shell: action.shell,
+      timeout: action.timeout,
     });
   }
 }

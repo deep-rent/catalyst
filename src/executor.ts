@@ -73,6 +73,23 @@ class ShellExecutor implements Executor {
         shell: cmd.options.shell ?? true,
       });
 
+      let timeoutTimer: NodeJS.Timeout | undefined;
+      let timedOut = false;
+
+      if (cmd.options.timeout !== undefined && cmd.options.timeout > 0) {
+        timeoutTimer = setTimeout(() => {
+          timedOut = true;
+          child.kill('SIGTERM');
+        }, cmd.options.timeout);
+      }
+
+      const clearTimer = () => {
+        if (timeoutTimer !== undefined) {
+          clearTimeout(timeoutTimer);
+          timeoutTimer = undefined;
+        }
+      };
+
       if (child.stdout) {
         logger.send(Level.info, `[${cmd.name} - stdout]:`);
         child.stdout.on('data', (data: Buffer | string) => {
@@ -90,6 +107,7 @@ class ShellExecutor implements Executor {
       let errorOccurred = false;
 
       child.on('error', (error: Error & { code?: string | number }) => {
+        clearTimer();
         errorOccurred = true;
         const duration: number = Date.now() - startTime;
         const code = error.code ?? -1;
@@ -120,13 +138,35 @@ class ShellExecutor implements Executor {
       });
 
       child.on('close', (code: number | null) => {
+        clearTimer();
         if (errorOccurred) {
           return;
         }
 
         const duration: number = Date.now() - startTime;
 
-        if (code !== 0) {
+        if (timedOut) {
+          logger.send(
+            Level.error,
+            `Action '${cmd.name}' timed out after ${cmd.options.timeout}ms.`,
+          );
+
+          if (
+            vscode.workspace
+              .getConfiguration(EXTENSION_NAME)
+              .get<boolean>('showErrorPopups', true)
+          ) {
+            const button = 'Show Logs';
+            this.showErrorMessageCallback(
+              `${logger.name}: Action '${cmd.name}' timed out.`,
+              button,
+            ).then((selection) => {
+              if (selection === button) {
+                logger.show();
+              }
+            });
+          }
+        } else if (code !== 0) {
           logger.send(
             Level.error,
             `Action '${cmd.name}' failed with exit code ${code} ` +

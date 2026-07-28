@@ -49,4 +49,12 @@ describe('Action', () => {
     const resource: Resource = new Resource(vscode.Uri.file('/foo/bar.ts'));
     assert.strictEqual(action.getCommand(resource), 'echo bar.ts');
   });
+
+  it('parses timeout configuration correctly', () => {
+    const validAction = new Action({ command: 'echo test', timeout: 5000 });
+    assert.strictEqual(validAction.timeout, 5000);
+
+    const invalidAction = new Action({ command: 'echo test', timeout: -100 });
+    assert.strictEqual(invalidAction.timeout, undefined);
+  });
 });
