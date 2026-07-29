@@ -161,6 +161,10 @@ Catalyst contributes interactive commands via the Command Palette (`Cmd+Shift+P`
 - Use absolute paths for commands (e.g., `/usr/local/bin/node` instead of just `node`) if they cannot be found.
 - Specify a custom shell executable using the `shell` option (e.g., `/bin/zsh` or `powershell.exe`) if you need a specific shell context.
 
+### Re-trigger Task Cancellation
+
+**Behavior:** If a file is saved again while an action for that file is still executing, Catalyst sends a `SIGTERM` signal to cancel the previous child process before launching the new run, preventing overlapping process contention.
+
 ### Performance & High CPU Usage
 
 **Problem:** Running heavy build or compile commands on every save can slow down your workspace and consume high CPU resources.
