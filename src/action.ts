@@ -3,6 +3,8 @@
  * Licensed under the MIT License.
  */
 
+import * as path from 'node:path';
+
 import type { ActionConfig } from './config';
 import { Platform } from './config';
 import type { Matcher } from './matcher';
@@ -109,9 +111,13 @@ export class Action {
    * @returns The substituted working directory or workspace folder fallback.
    */
   public getCwd(resource: Resource): string {
-    return this.cwd !== undefined
-      ? resource.substitute(this.cwd)
-      : resource.workspaceFolder;
+    if (this.cwd === undefined) {
+      return resource.workspaceFolder;
+    }
+    const resolved = resource.substitute(this.cwd);
+    return path.isAbsolute(resolved)
+      ? resolved
+      : path.resolve(resource.workspaceFolder, resolved);
   }
 
   /**

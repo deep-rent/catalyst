@@ -4,6 +4,7 @@
  */
 
 import * as assert from 'node:assert';
+import * as path from 'node:path';
 
 import * as vscode from 'vscode';
 
@@ -68,8 +69,21 @@ describe('Action', () => {
 
     assert.strictEqual(
       action.getCwd(resource),
-      `${resource.workspaceFolder}/custom`,
+      path.resolve(resource.workspaceFolder, 'custom'),
     );
     assert.deepStrictEqual(action.getEnv(resource), { testKey: 'bar_file' });
+  });
+
+  it('resolves relative cwd against workspaceFolder', () => {
+    const action = new Action({
+      command: 'echo test',
+      cwd: 'relative/subfolder',
+    });
+    const resource = new Resource(vscode.Uri.file('/workspace/src/file.ts'));
+
+    assert.strictEqual(
+      action.getCwd(resource),
+      path.resolve(resource.workspaceFolder, 'relative/subfolder'),
+    );
   });
 });
