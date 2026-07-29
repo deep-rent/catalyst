@@ -105,7 +105,8 @@ export class Action {
   }
 
   /**
-   * Resolves the effective working directory with variable substitutions applied.
+   * Resolves the effective working directory with variable substitutions
+   * applied.
    *
    * @param resource - The workspace file metadata variables.
    * @returns The substituted working directory or workspace folder fallback.
@@ -119,7 +120,8 @@ export class Action {
   }
 
   /**
-   * Resolves custom environment variables with variable substitutions applied to values.
+   * Resolves custom environment variables with variable substitutions applied
+   * to values.
    *
    * @param resource - The workspace file metadata variables.
    * @returns Key-value map of substituted environment variables or `undefined`.
@@ -137,7 +139,7 @@ export class Action {
 }
 
 /**
- * Resolves the current operating system platform.
+ * Determines the current operating system platform.
  *
  * @returns The detected platform representation.
  */
