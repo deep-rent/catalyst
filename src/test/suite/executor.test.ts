@@ -16,7 +16,7 @@ import type {
   Executor,
   ShowErrorMessageCallback,
 } from '../../executor';
-import { createExecutor } from '../../executor';
+import { createExecutor, LineBuffer } from '../../executor';
 import { Resource } from '../../resource';
 
 describe('Executor', () => {
@@ -175,5 +175,21 @@ describe('Executor', () => {
 
     await executor.execute(command);
     assert.strictEqual(capturedOptions?.env?.testKey, 'testVal');
+  });
+});
+
+describe('LineBuffer', () => {
+  it('buffers chunks and emits complete lines', () => {
+    const lines: string[] = [];
+    const buffer = new LineBuffer((line) => lines.push(line));
+
+    buffer.append('hello ');
+    assert.deepStrictEqual(lines, []);
+
+    buffer.append('world\nfoo\nbar');
+    assert.deepStrictEqual(lines, ['hello world', 'foo']);
+
+    buffer.flush();
+    assert.deepStrictEqual(lines, ['hello world', 'foo', 'bar']);
   });
 });

@@ -38,6 +38,44 @@ export type ExecuteCallback = (
 export type ShowErrorMessageCallback = typeof vscode.window.showErrorMessage;
 
 /**
+ * Buffers streaming text chunks into complete newline-terminated lines.
+ */
+export class LineBuffer {
+  private buffer = '';
+
+  /**
+   * Constructs a line buffer with a callback for complete lines.
+   *
+   * @param onLine - Callback invoked for each full line.
+   */
+  constructor(private readonly onLine: (line: string) => void) {}
+
+  /**
+   * Appends a data chunk and emits any complete lines.
+   *
+   * @param chunk - The text chunk to process.
+   */
+  public append(chunk: string): void {
+    this.buffer += chunk;
+    const lines = this.buffer.split('\n');
+    this.buffer = lines.pop() ?? '';
+    for (const line of lines) {
+      this.onLine(line);
+    }
+  }
+
+  /**
+   * Flushes any remaining incomplete line buffer.
+   */
+  public flush(): void {
+    if (this.buffer.length > 0) {
+      this.onLine(this.buffer);
+      this.buffer = '';
+    }
+  }
+}
+
+/**
  * Spawns a shell process to execute task commands.
  */
 class ShellExecutor implements Executor {
@@ -96,17 +134,30 @@ class ShellExecutor implements Executor {
         }
       };
 
+      const stdoutBuffer = new LineBuffer((line: string) => {
+        logger.append(`${line}\n`);
+      });
+
+      const stderrBuffer = new LineBuffer((line: string) => {
+        logger.append(`${line}\n`);
+      });
+
+      const flushBuffers = () => {
+        stdoutBuffer.flush();
+        stderrBuffer.flush();
+      };
+
       if (child.stdout) {
         logger.send(Level.info, `[${cmd.name} - stdout]:`);
         child.stdout.on('data', (data: Buffer | string) => {
-          logger.append(data.toString());
+          stdoutBuffer.append(data.toString());
         });
       }
 
       if (child.stderr) {
         logger.send(Level.error, `[${cmd.name} - stderr]:`);
         child.stderr.on('data', (data: Buffer | string) => {
-          logger.append(data.toString());
+          stderrBuffer.append(data.toString());
         });
       }
 
@@ -114,6 +165,7 @@ class ShellExecutor implements Executor {
 
       child.on('error', (error: Error & { code?: string | number }) => {
         clearTimer();
+        flushBuffers();
         errorOccurred = true;
         const duration: number = Date.now() - startTime;
         const code = error.code ?? -1;
@@ -145,6 +197,7 @@ class ShellExecutor implements Executor {
 
       child.on('close', (code: number | null) => {
         clearTimer();
+        flushBuffers();
         if (errorOccurred) {
           return;
         }
