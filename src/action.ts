@@ -115,9 +115,7 @@ export class Action {
       return resource.workspaceFolder;
     }
     const resolved = resource.substitute(this.cwd);
-    return path.isAbsolute(resolved)
-      ? resolved
-      : path.resolve(resource.workspaceFolder, resolved);
+    return path.resolve(resource.workspaceFolder, resolved);
   }
 
   /**
