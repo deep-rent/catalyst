@@ -8,6 +8,7 @@ import * as cp from 'node:child_process';
 import * as vscode from 'vscode';
 
 import type { Command } from './command';
+import { getShowOutput } from './config';
 import { EXTENSION_NAME } from './constants';
 import { Level, logger } from './logger';
 
@@ -99,6 +100,12 @@ class ShellExecutor implements Executor {
    */
   public execute(cmd: Command): Promise<void> {
     return new Promise((resolve) => {
+      const showOutputMode = getShowOutput();
+
+      if (showOutputMode === 'always') {
+        logger.show();
+      }
+
       logger.send(
         Level.info,
         `Running action '${cmd.name}': ${cmd.commandLine}`,
@@ -147,6 +154,12 @@ class ShellExecutor implements Executor {
         stderrBuffer.flush();
       };
 
+      const handleFailureOutput = () => {
+        if (showOutputMode === 'onError' || showOutputMode === 'always') {
+          logger.show();
+        }
+      };
+
       if (child.stdout) {
         logger.send(Level.info, `[${cmd.name} - stdout]:`);
         child.stdout.on('data', (data: Buffer | string) => {
@@ -166,6 +179,7 @@ class ShellExecutor implements Executor {
       child.on('error', (error: Error & { code?: string | number }) => {
         clearTimer();
         flushBuffers();
+        handleFailureOutput();
         errorOccurred = true;
         const duration: number = Date.now() - startTime;
         const code = error.code ?? -1;
@@ -205,6 +219,7 @@ class ShellExecutor implements Executor {
         const duration: number = Date.now() - startTime;
 
         if (timeoutExceeded) {
+          handleFailureOutput();
           logger.send(
             Level.error,
             `Action '${cmd.name}' timed out after ${cmd.options.timeout}ms.`,
@@ -226,6 +241,7 @@ class ShellExecutor implements Executor {
             });
           }
         } else if (code !== 0) {
+          handleFailureOutput();
           logger.send(
             Level.error,
             `Action '${cmd.name}' failed with exit code ${code} ` +
