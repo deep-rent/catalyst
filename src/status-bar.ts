@@ -64,10 +64,10 @@ export class StatusBarManager {
    */
   private update(): void {
     if (this.enabled) {
-      this.item.text = '$(play) Catalyst: Active';
+      this.item.text = '$(play) Catalyst';
       this.item.tooltip = 'Run on save is enabled. Click to disable.';
     } else {
-      this.item.text = '$(circle-slash) Catalyst: Disabled';
+      this.item.text = '$(circle-slash) Catalyst';
       this.item.tooltip = 'Run on save is disabled. Click to enable.';
     }
   }
