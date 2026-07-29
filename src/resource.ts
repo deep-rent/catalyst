@@ -23,6 +23,8 @@ export interface Variables {
   readonly pathSeparator: string;
 }
 
+const VARIABLE_REGEX = /\$\{([^}]+)\}/g;
+
 /**
  * Evaluates file metadata variables.
  */
@@ -72,14 +74,16 @@ export class Resource implements Variables {
    * @returns The interpolated command string.
    */
   public substitute(template: string): string {
-    const substitutedEnv = template.replace(
-      /\$\{env:([^}]+)\}/g,
-      (_match: string, envVar: string) => process.env[envVar] ?? '',
-    );
+    if (!template.includes('${')) {
+      return template;
+    }
 
-    return substitutedEnv.replace(
-      /\$\{(workspaceFolder|workspaceFolderBasename|file|relativeFile|relativeFileDirname|fileDirname|fileBasename|fileBasenameNoExtension|fileExtname|pathSeparator)\}/g,
-      (match: string, name: string) => this[name as keyof Variables] ?? match,
-    );
+    return template.replace(VARIABLE_REGEX, (match: string, name: string) => {
+      if (name.startsWith('env:')) {
+        return process.env[name.slice(4)] ?? '';
+      }
+      const val = this[name as keyof Variables];
+      return typeof val === 'string' ? val : match;
+    });
   }
 }
