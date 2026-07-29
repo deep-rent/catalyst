@@ -4,6 +4,7 @@
  */
 
 import * as assert from 'node:assert';
+import * as path from 'node:path';
 
 import * as vscode from 'vscode';
 
@@ -37,7 +38,10 @@ describe('Command', () => {
     const resource: Resource = new Resource(vscode.Uri.file('/foo/test.txt'));
     const command: Command = Command.create(action, resource);
 
-    assert.strictEqual(command.options.cwd, `${resource.workspaceFolder}/sub`);
+    assert.strictEqual(
+      command.options.cwd,
+      path.resolve(resource.workspaceFolder, 'sub'),
+    );
     assert.deepStrictEqual(command.options.env, { testKey: 'testValue' });
   });
 });
