@@ -2,6 +2,28 @@
 
 All notable changes to the extension will be documented in this file.
 
+## [1.1.0] - 2026-07-29
+
+### Added
+
+- Added `timeout` configuration property to automatically terminate long-running processes when exceeded.
+- Allow specifying custom working directories via the `cwd` option.
+- Allow passing environment variables via the `env` option.
+- Support adjusting the output channel visibility (`never`, `onError`, `always`).
+- Integrated a status bar indicator to the display current activation state and enable one-click toggling.
+- Contributed `toggle`, `run`, and `showOutput` shortcuts to the command palette.
+
+### Changed
+
+- Upgraded dependencies for internal housekeeping and build optimization.
+- Enhanced action configuration validation error logs to include the specific action index, name, and validation failure reason.
+
+### Fixed
+
+- Fixed cross-platform root-relative path resolution for `cwd` on Windows environments.
+- Buffer `stdout` and `stderr` streams to prevent fragmented output.
+- Pinned deterministic VS Code test runner version to match minimum engine requirements.
+
 ## [1.0.7] - 2026-07-20
 
 ### Changed
