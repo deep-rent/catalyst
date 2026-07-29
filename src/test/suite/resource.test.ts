@@ -34,16 +34,16 @@ describe('Resource', () => {
   });
 
   it('substitutes relativeFileDirname, pathSeparator, and env variables', () => {
-    process.env.TEST_CATALYST_ENV_VAR = 'hello_world';
+    process.env['TEST-CATALYST-ENV.VAR'] = 'hello_world';
     const uri: vscode.Uri = vscode.Uri.file('/foo/bar/baz.ts');
     const resource: Resource = new Resource(uri);
 
     const template: string =
-      'echo ${env:TEST_CATALYST_ENV_VAR} ${relativeFileDirname} ${pathSeparator}';
+      'echo ${env:TEST-CATALYST-ENV.VAR} ${relativeFileDirname} ${pathSeparator}';
     const result: string = resource.substitute(template);
 
     assert.strictEqual(result, `echo hello_world . ${resource.pathSeparator}`);
-    delete process.env.TEST_CATALYST_ENV_VAR;
+    delete process.env['TEST-CATALYST-ENV.VAR'];
   });
 
   it('leaves unknown variables unchanged', () => {

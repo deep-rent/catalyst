@@ -73,7 +73,7 @@ export class Resource implements Variables {
    */
   public substitute(template: string): string {
     const substitutedEnv = template.replace(
-      /\$\{env:([a-zA-Z0-9_]+)\}/g,
+      /\$\{env:([^}]+)\}/g,
       (_match: string, envVar: string) => process.env[envVar] ?? '',
     );
 
