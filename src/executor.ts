@@ -8,6 +8,7 @@ import * as cp from 'node:child_process';
 import * as vscode from 'vscode';
 
 import type { Command } from './command';
+import { getShowOutput } from './config';
 import { EXTENSION_NAME } from './constants';
 import { Level, logger } from './logger';
 
@@ -38,6 +39,44 @@ export type ExecuteCallback = (
 export type ShowErrorMessageCallback = typeof vscode.window.showErrorMessage;
 
 /**
+ * Buffers streaming text chunks into complete newline-terminated lines.
+ */
+export class LineBuffer {
+  private buffer = '';
+
+  /**
+   * Constructs a line buffer with a callback for complete lines.
+   *
+   * @param onLine - Callback invoked for each full line.
+   */
+  constructor(private readonly onLine: (line: string) => void) {}
+
+  /**
+   * Appends a data chunk and emits any complete lines.
+   *
+   * @param chunk - The text chunk to process.
+   */
+  public append(chunk: string): void {
+    this.buffer += chunk;
+    const lines = this.buffer.split('\n');
+    this.buffer = lines.pop() ?? '';
+    for (const line of lines) {
+      this.onLine(line);
+    }
+  }
+
+  /**
+   * Flushes any remaining incomplete line buffer.
+   */
+  public flush(): void {
+    if (this.buffer.length > 0) {
+      this.onLine(this.buffer);
+      this.buffer = '';
+    }
+  }
+}
+
+/**
  * Spawns a shell process to execute task commands.
  */
 class ShellExecutor implements Executor {
@@ -61,6 +100,12 @@ class ShellExecutor implements Executor {
    */
   public execute(cmd: Command): Promise<void> {
     return new Promise((resolve) => {
+      const showOutputMode = getShowOutput();
+
+      if (showOutputMode === 'always') {
+        logger.show();
+      }
+
       logger.send(
         Level.info,
         `Running action '${cmd.name}': ${cmd.commandLine}`,
@@ -79,34 +124,53 @@ class ShellExecutor implements Executor {
         env: spawnEnv,
       });
 
-      let timeoutTimer: NodeJS.Timeout | undefined;
-      let timeoutExceeded = false;
+      let timer: NodeJS.Timeout | undefined;
+      let timedOut = false;
 
       if (cmd.options.timeout !== undefined && cmd.options.timeout > 0) {
-        timeoutTimer = setTimeout(() => {
-          timeoutExceeded = true;
+        timer = setTimeout(() => {
+          timedOut = true;
           child.kill('SIGTERM');
         }, cmd.options.timeout);
       }
 
       const clearTimer = () => {
-        if (timeoutTimer !== undefined) {
-          clearTimeout(timeoutTimer);
-          timeoutTimer = undefined;
+        if (timer !== undefined) {
+          clearTimeout(timer);
+          timer = undefined;
+        }
+      };
+
+      const stdoutBuffer = new LineBuffer((line: string) => {
+        logger.append(`${line}\n`);
+      });
+
+      const stderrBuffer = new LineBuffer((line: string) => {
+        logger.append(`${line}\n`);
+      });
+
+      const flush = () => {
+        stdoutBuffer.flush();
+        stderrBuffer.flush();
+      };
+
+      const showError = () => {
+        if (showOutputMode === 'onError' || showOutputMode === 'always') {
+          logger.show();
         }
       };
 
       if (child.stdout) {
         logger.send(Level.info, `[${cmd.name} - stdout]:`);
         child.stdout.on('data', (data: Buffer | string) => {
-          logger.append(data.toString());
+          stdoutBuffer.append(data.toString());
         });
       }
 
       if (child.stderr) {
         logger.send(Level.error, `[${cmd.name} - stderr]:`);
         child.stderr.on('data', (data: Buffer | string) => {
-          logger.append(data.toString());
+          stderrBuffer.append(data.toString());
         });
       }
 
@@ -114,6 +178,8 @@ class ShellExecutor implements Executor {
 
       child.on('error', (error: Error & { code?: string | number }) => {
         clearTimer();
+        flush();
+        showError();
         errorOccurred = true;
         const duration: number = Date.now() - startTime;
         const code = error.code ?? -1;
@@ -145,13 +211,15 @@ class ShellExecutor implements Executor {
 
       child.on('close', (code: number | null) => {
         clearTimer();
+        flush();
         if (errorOccurred) {
           return;
         }
 
         const duration: number = Date.now() - startTime;
 
-        if (timeoutExceeded) {
+        if (timedOut) {
+          showError();
           logger.send(
             Level.error,
             `Action '${cmd.name}' timed out after ${cmd.options.timeout}ms.`,
@@ -173,6 +241,7 @@ class ShellExecutor implements Executor {
             });
           }
         } else if (code !== 0) {
+          showError();
           logger.send(
             Level.error,
             `Action '${cmd.name}' failed with exit code ${code} ` +

@@ -5,7 +5,7 @@
 
 import * as assert from 'node:assert';
 
-import { clearCache, getActions } from '../../config';
+import { clearCache, getActions, getShowOutput } from '../../config';
 
 describe('Config', () => {
   it('retrieves actions configuration', () => {
@@ -18,5 +18,10 @@ describe('Config', () => {
     clearCache();
     const actions2 = getActions();
     assert.notStrictEqual(actions1, actions2);
+  });
+
+  it('retrieves default showOutput setting', () => {
+    const mode = getShowOutput();
+    assert.ok(mode === 'never' || mode === 'onError' || mode === 'always');
   });
 });

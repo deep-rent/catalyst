@@ -83,10 +83,11 @@ Configure the extension inside your VS Code `settings.json` file.
 
 ### Settings
 
-| Setting                                | Type      | Default | Description                                                        |
-| :------------------------------------- | :-------- | :------ | :----------------------------------------------------------------- |
-| `catalyst-run-on-save.actions`         | `array`   | `[]`    | List of actions to execute on file save.                           |
-| `catalyst-run-on-save.showErrorPopups` | `boolean` | `true`  | Show notification popups if an action command exits with an error. |
+| Setting                                | Type      | Default     | Description                                                                |
+| :------------------------------------- | :-------- | :---------- | :------------------------------------------------------------------------- |
+| `catalyst-run-on-save.actions`         | `array`   | `[]`        | List of actions to execute on file save.                                   |
+| `catalyst-run-on-save.showErrorPopups` | `boolean` | `true`      | Show notification popups if an action command exits with an error.          |
+| `catalyst-run-on-save.showOutput`      | `string`  | `"onError"` | Auto-reveal output channel behavior (`"never"`, `"onError"`, `"always"`).   |
 
 ### Action Properties
 

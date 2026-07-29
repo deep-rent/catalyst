@@ -102,6 +102,16 @@
           "type": "boolean",
           "default": true,
           "description": "Show an error message popup when an action fails."
+        },
+        "catalyst-run-on-save.showOutput": {
+          "type": "string",
+          "enum": [
+            "never",
+            "onError",
+            "always"
+          ],
+          "default": "onError",
+          "description": "Controls when to automatically show the extension output channel."
         }
       }
     }

@@ -87,3 +87,23 @@ export function getActions(): Action[] {
 export function clearCache(): void {
   cache = undefined;
 }
+
+/**
+ * Specifies the display mode for automatically revealing the logger output channel.
+ */
+export type ShowOutputMode = 'never' | 'onError' | 'always';
+
+/**
+ * Retrieves the configured output channel reveal behavior mode.
+ *
+ * @returns The resolved show output mode setting (`'never'`, `'onError'`, or `'always'`).
+ */
+export function getShowOutput(): ShowOutputMode {
+  const mode = vscode.workspace
+    .getConfiguration(EXTENSION_NAME)
+    .get<ShowOutputMode>('showOutput', 'onError');
+
+  return mode === 'never' || mode === 'onError' || mode === 'always'
+    ? mode
+    : 'onError';
+}
