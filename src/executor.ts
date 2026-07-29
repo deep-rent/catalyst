@@ -124,20 +124,20 @@ class ShellExecutor implements Executor {
         env: spawnEnv,
       });
 
-      let timeoutTimer: NodeJS.Timeout | undefined;
-      let timeoutExceeded = false;
+      let timer: NodeJS.Timeout | undefined;
+      let timedOut = false;
 
       if (cmd.options.timeout !== undefined && cmd.options.timeout > 0) {
-        timeoutTimer = setTimeout(() => {
-          timeoutExceeded = true;
+        timer = setTimeout(() => {
+          timedOut = true;
           child.kill('SIGTERM');
         }, cmd.options.timeout);
       }
 
       const clearTimer = () => {
-        if (timeoutTimer !== undefined) {
-          clearTimeout(timeoutTimer);
-          timeoutTimer = undefined;
+        if (timer !== undefined) {
+          clearTimeout(timer);
+          timer = undefined;
         }
       };
 
@@ -149,12 +149,12 @@ class ShellExecutor implements Executor {
         logger.append(`${line}\n`);
       });
 
-      const flushBuffers = () => {
+      const flush = () => {
         stdoutBuffer.flush();
         stderrBuffer.flush();
       };
 
-      const handleFailureOutput = () => {
+      const showError = () => {
         if (showOutputMode === 'onError' || showOutputMode === 'always') {
           logger.show();
         }
@@ -178,8 +178,8 @@ class ShellExecutor implements Executor {
 
       child.on('error', (error: Error & { code?: string | number }) => {
         clearTimer();
-        flushBuffers();
-        handleFailureOutput();
+        flush();
+        showError();
         errorOccurred = true;
         const duration: number = Date.now() - startTime;
         const code = error.code ?? -1;
@@ -211,15 +211,15 @@ class ShellExecutor implements Executor {
 
       child.on('close', (code: number | null) => {
         clearTimer();
-        flushBuffers();
+        flush();
         if (errorOccurred) {
           return;
         }
 
         const duration: number = Date.now() - startTime;
 
-        if (timeoutExceeded) {
-          handleFailureOutput();
+        if (timedOut) {
+          showError();
           logger.send(
             Level.error,
             `Action '${cmd.name}' timed out after ${cmd.options.timeout}ms.`,
@@ -241,7 +241,7 @@ class ShellExecutor implements Executor {
             });
           }
         } else if (code !== 0) {
-          handleFailureOutput();
+          showError();
           logger.send(
             Level.error,
             `Action '${cmd.name}' failed with exit code ${code} ` +
