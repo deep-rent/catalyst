@@ -10,8 +10,10 @@ async function main(): Promise<void> {
   try {
     const extensionDevelopmentPath = path.resolve(__dirname, '../../');
     const extensionTestsPath = path.resolve(__dirname, './suite/index');
+    const version = process.env.VSCODE_VERSION ?? '1.107.0';
 
     await runTests({
+      version,
       extensionDevelopmentPath,
       extensionTestsPath,
     });
