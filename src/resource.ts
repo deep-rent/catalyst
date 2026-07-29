@@ -15,10 +15,12 @@ export interface Variables {
   readonly workspaceFolderBasename: string;
   readonly file: string;
   readonly relativeFile: string;
+  readonly relativeFileDirname: string;
   readonly fileDirname: string;
   readonly fileBasename: string;
   readonly fileBasenameNoExtension: string;
   readonly fileExtname: string;
+  readonly pathSeparator: string;
 }
 
 /**
@@ -29,10 +31,12 @@ export class Resource implements Variables {
   public readonly workspaceFolderBasename: string;
   public readonly file: string;
   public readonly relativeFile: string;
+  public readonly relativeFileDirname: string;
   public readonly fileDirname: string;
   public readonly fileBasename: string;
   public readonly fileBasenameNoExtension: string;
   public readonly fileExtname: string;
+  public readonly pathSeparator: string;
 
   /**
    * Evaluates and populates path properties for the target file.
@@ -51,10 +55,12 @@ export class Resource implements Variables {
     this.relativeFile = workspacePath
       ? path.relative(workspacePath, this.file)
       : this.fileBasename;
+    this.relativeFileDirname = path.dirname(this.relativeFile);
     this.workspaceFolder = workspacePath || this.fileDirname;
     this.workspaceFolderBasename = workspacePath
       ? path.basename(workspacePath)
       : path.basename(this.fileDirname);
+    this.pathSeparator = path.sep;
   }
 
   /**
@@ -66,8 +72,13 @@ export class Resource implements Variables {
    * @returns The interpolated command string.
    */
   public substitute(template: string): string {
-    return template.replace(
-      /\$\{(workspaceFolder|workspaceFolderBasename|file|relativeFile|fileDirname|fileBasename|fileBasenameNoExtension|fileExtname)\}/g,
+    const substitutedEnv = template.replace(
+      /\$\{env:([a-zA-Z0-9_]+)\}/g,
+      (_match: string, envVar: string) => process.env[envVar] ?? '',
+    );
+
+    return substitutedEnv.replace(
+      /\$\{(workspaceFolder|workspaceFolderBasename|file|relativeFile|relativeFileDirname|fileDirname|fileBasename|fileBasenameNoExtension|fileExtname|pathSeparator)\}/g,
       (match: string, name: string) => this[name as keyof Variables] ?? match,
     );
   }
