@@ -13,9 +13,10 @@ export class StatusBarManager {
   private enabled = true;
 
   /**
-   * Initializes the status bar manager and registers the item in extension subscriptions.
+   * Initializes the status bar manager and registers the item in extension
+   * subscriptions.
    *
-   * @param context - The ExtensionContext container to bind lifecycle disposables.
+   * @param context - The context container for binding lifecycle disposables.
    */
   constructor(context: vscode.ExtensionContext) {
     this.item = vscode.window.createStatusBarItem(
@@ -58,13 +59,16 @@ export class StatusBarManager {
     this.update();
   }
 
+  /**
+   * Updates the status bar item based on the current enabled state.
+   */
   private update(): void {
     if (this.enabled) {
       this.item.text = '$(play) Catalyst: Active';
-      this.item.tooltip = 'Catalyst: Run on Save is active. Click to disable.';
+      this.item.tooltip = 'Run on save is enabled. Click to disable.';
     } else {
       this.item.text = '$(circle-slash) Catalyst: Disabled';
-      this.item.tooltip = 'Catalyst: Run on Save is disabled. Click to enable.';
+      this.item.tooltip = 'Run on save is disabled. Click to enable.';
     }
   }
 }
