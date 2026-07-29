@@ -57,4 +57,19 @@ describe('Action', () => {
     const invalidAction = new Action({ command: 'echo test', timeout: -100 });
     assert.strictEqual(invalidAction.timeout, undefined);
   });
+
+  it('parses and resolves custom cwd and env configuration', () => {
+    const action = new Action({
+      command: 'echo test',
+      cwd: '${workspaceFolder}/custom',
+      env: { testKey: 'bar_${fileBasenameNoExtension}' },
+    });
+    const resource = new Resource(vscode.Uri.file('/workspace/src/file.ts'));
+
+    assert.strictEqual(
+      action.getCwd(resource),
+      `${resource.workspaceFolder}/custom`,
+    );
+    assert.deepStrictEqual(action.getEnv(resource), { testKey: 'bar_file' });
+  });
 });
