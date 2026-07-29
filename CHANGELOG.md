@@ -2,6 +2,12 @@
 
 All notable changes to the extension will be documented in this file.
 
+## [1.1.2] - 2026-07-29
+
+### Changed
+
+- Added new extension logo.
+
 ## [1.1.1] - 2026-07-29
 
 ### Fixed
