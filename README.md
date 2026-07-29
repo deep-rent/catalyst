@@ -77,6 +77,20 @@ Automatically compile and run tests in a Go project when code changes:
 }
 ```
 
+## Commands & Status Bar
+
+Catalyst contributes interactive commands via the Command Palette (`Cmd+Shift+P` / `Ctrl+Shift+P`) and a Status Bar indicator:
+
+| Command | Title | Description |
+| :--- | :--- | :--- |
+| `catalyst.toggle` | **Catalyst: Toggle Run on Save** | Globally enable or disable automatic execution on file save. Also toggled by clicking the Status Bar item. |
+| `catalyst.run` | **Catalyst: Run Actions for Active File** | Manually trigger matching run-on-save actions for the active text editor document. |
+| `catalyst.showOutput` | **Catalyst: Show Output Channel** | Open the Catalyst log output channel. |
+
+### Status Bar Indicator
+
+When active, Catalyst displays `$(play) Catalyst: Active` in the status bar. Clicking the indicator toggles global auto-execution and updates the status bar to `$(circle-slash) Catalyst: Disabled`.
+
 ## Configuration
 
 Configure the extension inside your VS Code `settings.json` file.
