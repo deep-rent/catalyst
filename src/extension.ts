@@ -9,6 +9,7 @@ import { clearCache } from './config';
 import { EXTENSION_NAME } from './constants';
 import { Level, logger } from './logger';
 import { run } from './runner';
+import { StatusBarManager } from './statusBar';
 
 /**
  * Hooks up workspace listeners for save events and configuration modifications.
@@ -19,9 +20,14 @@ export function activate(context: vscode.ExtensionContext): void {
   logger.init(context);
   logger.send(Level.info, `${logger.name} extension activated.`);
 
+  const statusBarManager = new StatusBarManager(context);
+
   context.subscriptions.push(
     vscode.workspace.onDidSaveTextDocument(
       async (document: vscode.TextDocument) => {
+        if (!statusBarManager.isEnabled()) {
+          return;
+        }
         await run(document.uri);
       },
     ),
@@ -33,6 +39,33 @@ export function activate(context: vscode.ExtensionContext): void {
         }
       },
     ),
+
+    vscode.commands.registerCommand('catalyst.toggle', () => {
+      const enabled = statusBarManager.toggle();
+      const statusText = enabled ? 'enabled' : 'disabled';
+      logger.send(Level.info, `Catalyst run-on-save globally ${statusText}.`);
+      vscode.window.setStatusBarMessage(
+        `Catalyst: Run on Save ${statusText}`,
+        2000,
+      );
+    }),
+
+    vscode.commands.registerCommand('catalyst.run', async () => {
+      const activeEditor = vscode.window.activeTextEditor;
+      if (!activeEditor) {
+        vscode.window.showWarningMessage('Catalyst: No active editor found.');
+        return;
+      }
+      logger.send(
+        Level.info,
+        `Manually triggering actions for file: ${activeEditor.document.uri.fsPath}`,
+      );
+      await run(activeEditor.document.uri);
+    }),
+
+    vscode.commands.registerCommand('catalyst.showOutput', () => {
+      logger.show();
+    }),
   );
 }
 
