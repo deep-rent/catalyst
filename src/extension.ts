@@ -9,7 +9,7 @@ import { clearCache } from './config';
 import { EXTENSION_NAME } from './constants';
 import { Level, logger } from './logger';
 import { run } from './runner';
-import { StatusBarManager } from './statusBar';
+import { StatusBarManager } from './status-bar';
 
 /**
  * Hooks up workspace listeners for save events and configuration modifications.

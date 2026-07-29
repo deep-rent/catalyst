@@ -7,7 +7,7 @@ import * as assert from 'node:assert';
 
 import type * as vscode from 'vscode';
 
-import { StatusBarManager } from '../../statusBar';
+import { StatusBarManager } from '../../status-bar';
 
 describe('StatusBarManager', () => {
   it('initializes in enabled state and toggles properly', () => {
