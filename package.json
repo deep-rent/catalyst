@@ -2,7 +2,7 @@
   "name": "catalyst-run-on-save",
   "displayName": "Catalyst - Run on Save",
   "description": "Run commands automatically on file save",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "publisher": "deep-rent",
   "author": "deep.rent GmbH",
   "license": "MIT",
