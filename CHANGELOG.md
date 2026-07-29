@@ -2,6 +2,12 @@
 
 All notable changes to the extension will be documented in this file.
 
+## [1.1.1] - 2026-07-29
+
+### Fixed
+
+- Stripped duplicate category prefix from command titles.
+
 ## [1.1.0] - 2026-07-29
 
 ### Added
