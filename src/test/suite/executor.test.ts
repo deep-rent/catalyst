@@ -186,17 +186,25 @@ describe('Executor', () => {
     ): cp.ChildProcess => {
       const stdout = new EventEmitter();
       const stderr = new EventEmitter();
+      let wasKilled = false;
       const child = Object.assign(new EventEmitter(), {
         stdout,
         stderr,
         kill: (signal: string) => {
           killedSignal = signal;
+          wasKilled = true;
           process.nextTick(() => {
             child.emit('close', 1);
           });
           return true;
         },
       }) as unknown as cp.ChildProcess;
+
+      process.nextTick(() => {
+        if (!wasKilled) {
+          child.emit('close', 0);
+        }
+      });
 
       return child;
     };
