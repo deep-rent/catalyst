@@ -100,6 +100,8 @@ Each action object in `catalyst-run-on-save.actions` supports the following prop
 | `exclude` | `string[]`           | No       | Glob patterns to prevent matching files from triggering the action.                                                               |
 | `shell`   | `string`             | No       | Absolute path to a custom shell executable (e.g., `/bin/zsh`, `powershell.exe`).                                                  |
 | `timeout` | `number`             | No       | Execution timeout limit in milliseconds. The process is terminated if it exceeds this threshold. Omitted or `0` disables timeout. |
+| `cwd`     | `string`             | No       | Custom working directory for executing the command. Supports variable placeholders (defaults to `${workspaceFolder}`).             |
+| `env`     | `object`             | No       | Key-value map of environment variables passed to the spawned process (e.g. `{ "NODE_ENV": "development" }`).                       |
 
 > **Note:** Globs are evaluated relative to your workspace root directory. They support both standard file extension patterns (e.g., `**/*.ts`) and directory-specific exclusions.
 
@@ -113,10 +115,13 @@ You can embed the following [placeholders](https://code.visualstudio.com/docs/re
 | `${workspaceFolderBasename}` | The folder name of the workspace root        | `my-app`                                   |
 | `${file}`                    | Absolute path of the saved file              | `/Users/alice/Code/my-app/src/config.json` |
 | `${relativeFile}`            | Workspace-relative path of the saved file    | `src/config.json`                          |
+| `${relativeFileDirname}`     | Workspace-relative directory of saved file   | `src`                                      |
 | `${fileBasename}`            | Filename including extension                 | `config.json`                              |
 | `${fileBasenameNoExtension}` | Filename excluding extension                 | `config`                                   |
 | `${fileExtname}`             | Only the file extension                      | `.json`                                    |
 | `${fileDirname}`             | Absolute path of the saved file's directory  | `/Users/alice/Code/my-app/src`             |
+| `${pathSeparator}`           | System path separator (`/` or `\`)           | `/`                                        |
+| `${env:VAR_NAME}`            | Value of environment variable `VAR_NAME`     | `/Users/alice`                             |
 
 ## Troubleshooting
 
