@@ -80,6 +80,11 @@ export class LineBuffer {
  * Spawns a shell process to execute task commands.
  */
 class ShellExecutor implements Executor {
+  private readonly runningProcesses = new Map<
+    string,
+    { child: cp.ChildProcess; wasCancelled: boolean }
+  >();
+
   /**
    * Constructs a new instance with injectable execution dependencies.
    *
@@ -100,6 +105,16 @@ class ShellExecutor implements Executor {
    */
   public execute(cmd: Command): Promise<void> {
     return new Promise((resolve) => {
+      const existing = this.runningProcesses.get(cmd.name);
+      if (existing !== undefined) {
+        existing.wasCancelled = true;
+        logger.send(
+          Level.info,
+          `Action '${cmd.name}' re-triggered; cancelling previous execution.`,
+        );
+        existing.child.kill('SIGTERM');
+      }
+
       const showOutputMode = getShowOutput();
 
       if (showOutputMode === 'always') {
@@ -123,6 +138,9 @@ class ShellExecutor implements Executor {
         shell: cmd.options.shell ?? true,
         env: spawnEnv,
       });
+
+      const activeProcess = { child, wasCancelled: false };
+      this.runningProcesses.set(cmd.name, activeProcess);
 
       let timer: NodeJS.Timeout | undefined;
       let timedOut = false;
@@ -154,6 +172,14 @@ class ShellExecutor implements Executor {
         stderrBuffer.flush();
       };
 
+      const cleanup = () => {
+        clearTimer();
+        flush();
+        if (this.runningProcesses.get(cmd.name) === activeProcess) {
+          this.runningProcesses.delete(cmd.name);
+        }
+      };
+
       const showError = () => {
         if (showOutputMode === 'onError' || showOutputMode === 'always') {
           logger.show();
@@ -177,8 +203,11 @@ class ShellExecutor implements Executor {
       let errorOccurred = false;
 
       child.on('error', (error: Error & { code?: string | number }) => {
-        clearTimer();
-        flush();
+        cleanup();
+        if (activeProcess.wasCancelled) {
+          resolve();
+          return;
+        }
         showError();
         errorOccurred = true;
         const duration: number = Date.now() - startTime;
@@ -210,9 +239,18 @@ class ShellExecutor implements Executor {
       });
 
       child.on('close', (code: number | null) => {
-        clearTimer();
-        flush();
+        cleanup();
         if (errorOccurred) {
+          resolve();
+          return;
+        }
+
+        if (activeProcess.wasCancelled) {
+          logger.send(
+            Level.info,
+            `Action '${cmd.name}' cancelled prior to completion.`,
+          );
+          resolve();
           return;
         }
 

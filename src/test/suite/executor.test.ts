@@ -176,6 +176,46 @@ describe('Executor', () => {
     await executor.execute(command);
     assert.strictEqual(capturedOptions?.env?.testKey, 'testVal');
   });
+
+  it('cancels active process when re-triggered', async () => {
+    let killedSignal: string | undefined;
+
+    const executeCallback = (
+      _cmd: string,
+      _opts: cp.SpawnOptions,
+    ): cp.ChildProcess => {
+      const stdout = new EventEmitter();
+      const stderr = new EventEmitter();
+      const child = Object.assign(new EventEmitter(), {
+        stdout,
+        stderr,
+        kill: (signal: string) => {
+          killedSignal = signal;
+          process.nextTick(() => {
+            child.emit('close', 1);
+          });
+          return true;
+        },
+      }) as unknown as cp.ChildProcess;
+
+      return child;
+    };
+
+    const executor: Executor = createExecutor(executeCallback);
+    const action: Action = new Action({
+      name: 'ReTriggerTask',
+      command: 'sleep 10',
+    });
+    const resource: Resource = new Resource(vscode.Uri.file('/test'));
+    const command: Command = Command.create(action, resource);
+
+    const run1 = executor.execute(command);
+    const run2 = executor.execute(command);
+
+    await Promise.all([run1, run2]);
+
+    assert.strictEqual(killedSignal, 'SIGTERM');
+  });
 });
 
 describe('LineBuffer', () => {
