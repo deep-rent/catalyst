@@ -70,11 +70,20 @@ export function getActions(): Action[] {
   }
 
   cache = [];
-  for (const config of configs) {
+  for (let i = 0; i < configs.length; i += 1) {
+    const config = configs[i];
+    if (config === undefined) {
+      continue;
+    }
     try {
       cache.push(new Action(config));
     } catch (error: unknown) {
-      logger.send(Level.error, 'Invalid action configuration ignored:', error);
+      const message = error instanceof Error ? error.message : String(error);
+      const name = typeof config.name === 'string' ? `'${config.name}' ` : '';
+      logger.send(
+        Level.error,
+        `Invalid action ${name}at index ${i} ignored: ${message}`,
+      );
     }
   }
 
