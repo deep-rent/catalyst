@@ -79,17 +79,13 @@ Automatically compile and run tests in a Go project when code changes:
 
 ## Commands & Status Bar
 
-Catalyst contributes interactive commands via the Command Palette (`Cmd+Shift+P` / `Ctrl+Shift+P`) and a Status Bar indicator:
+Catalyst contributes interactive commands via the Command Palette (`Cmd+Shift+P` / `Ctrl+Shift+P`) and a status bar indicator:
 
-| Command | Title | Description |
-| :--- | :--- | :--- |
-| `catalyst.toggle` | **Catalyst: Toggle Run on Save** | Globally enable or disable automatic execution on file save. Also toggled by clicking the Status Bar item. |
-| `catalyst.run` | **Catalyst: Run Actions for Active File** | Manually trigger matching run-on-save actions for the active text editor document. |
-| `catalyst.showOutput` | **Catalyst: Show Output Channel** | Open the Catalyst log output channel. |
-
-### Status Bar Indicator
-
-When active, Catalyst displays `$(play) Catalyst: Active` in the status bar. Clicking the indicator toggles global auto-execution and updates the status bar to `$(circle-slash) Catalyst: Disabled`.
+| Command               | Title                                     | Description                                                                                                |
+| :-------------------- | :---------------------------------------- | :--------------------------------------------------------------------------------------------------------- |
+| `catalyst.toggle`     | **Catalyst: Toggle Run on Save**          | Globally enable or disable automatic execution on file save. Also toggled by clicking the status bar item. |
+| `catalyst.run`        | **Catalyst: Run Actions for Active File** | Manually trigger matching run-on-save actions for the active text editor document.                         |
+| `catalyst.showOutput` | **Catalyst: Show Output Channel**         | Open the Catalyst log output channel.                                                                      |
 
 ## Configuration
 
@@ -97,11 +93,11 @@ Configure the extension inside your VS Code `settings.json` file.
 
 ### Settings
 
-| Setting                                | Type      | Default     | Description                                                                |
-| :------------------------------------- | :-------- | :---------- | :------------------------------------------------------------------------- |
-| `catalyst-run-on-save.actions`         | `array`   | `[]`        | List of actions to execute on file save.                                   |
-| `catalyst-run-on-save.showErrorPopups` | `boolean` | `true`      | Show notification popups if an action command exits with an error.          |
-| `catalyst-run-on-save.showOutput`      | `string`  | `"onError"` | Auto-reveal output channel behavior (`"never"`, `"onError"`, `"always"`).   |
+| Setting                                | Type      | Default     | Description                                                               |
+| :------------------------------------- | :-------- | :---------- | :------------------------------------------------------------------------ |
+| `catalyst-run-on-save.actions`         | `array`   | `[]`        | List of actions to execute on file save.                                  |
+| `catalyst-run-on-save.showErrorPopups` | `boolean` | `true`      | Show notification popups if an action command exits with an error.        |
+| `catalyst-run-on-save.showOutput`      | `string`  | `"onError"` | Auto-reveal output channel behavior (`"never"`, `"onError"`, `"always"`). |
 
 ### Action Properties
 
