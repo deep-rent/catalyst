@@ -24,6 +24,7 @@ export interface Variables {
 }
 
 const VARIABLE_REGEX = /\$\{([^}]+)\}/g;
+const ENV_VAR_PREFIX = 'env:';
 
 /**
  * Evaluates file metadata variables.
@@ -79,7 +80,7 @@ export class Resource implements Variables {
     }
 
     return template.replace(VARIABLE_REGEX, (match: string, name: string) => {
-      if (name.startsWith('env:')) {
+      if (name.startsWith(ENV_VAR_PREFIX)) {
         return process.env[name.slice(4)] ?? '';
       }
       const val = this[name as keyof Variables];
