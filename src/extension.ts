@@ -12,7 +12,8 @@ import { run } from './runner';
 import { StatusBarManager } from './status-bar';
 
 /**
- * Hooks up workspace listeners for save events and configuration modifications.
+ * Hooks up workspace listeners for save events, configuration modifications,
+ * and registers commands.
  *
  * @param context - The context container for this extension.
  */
@@ -41,26 +42,25 @@ export function activate(context: vscode.ExtensionContext): void {
     ),
 
     vscode.commands.registerCommand('catalyst.toggle', () => {
-      const enabled = statusBarManager.toggle();
-      const statusText = enabled ? 'enabled' : 'disabled';
-      logger.send(Level.info, `Catalyst run-on-save globally ${statusText}.`);
+      const status = statusBarManager.toggle() ? 'enabled' : 'disabled';
+      logger.send(Level.info, `Catalyst globally ${status}.`);
       vscode.window.setStatusBarMessage(
-        `Catalyst: Run on Save ${statusText}`,
+        `Catalyst: Run on Save ${status}`,
         2000,
       );
     }),
 
     vscode.commands.registerCommand('catalyst.run', async () => {
-      const activeEditor = vscode.window.activeTextEditor;
-      if (!activeEditor) {
+      const editor = vscode.window.activeTextEditor;
+      if (!editor) {
         vscode.window.showWarningMessage('Catalyst: No active editor found.');
         return;
       }
       logger.send(
         Level.info,
-        `Manually triggering actions for file: ${activeEditor.document.uri.fsPath}`,
+        `Manually triggering actions for file: ${editor.document.uri.fsPath}`,
       );
-      await run(activeEditor.document.uri);
+      await run(editor.document.uri);
     }),
 
     vscode.commands.registerCommand('catalyst.showOutput', () => {
