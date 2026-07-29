@@ -23,4 +23,11 @@ describe('Extension', () => {
 
     assert.strictEqual(extension.isActive, true);
   });
+
+  it('registers catalyst commands', async () => {
+    const commands = await vscode.commands.getCommands(true);
+    assert.ok(commands.includes('catalyst.toggle'));
+    assert.ok(commands.includes('catalyst.run'));
+    assert.ok(commands.includes('catalyst.showOutput'));
+  });
 });

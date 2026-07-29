@@ -38,6 +38,23 @@
   ],
   "main": "./dist/extension.js",
   "contributes": {
+    "commands": [
+      {
+        "command": "catalyst.toggle",
+        "title": "Catalyst: Toggle Run on Save",
+        "category": "Catalyst"
+      },
+      {
+        "command": "catalyst.run",
+        "title": "Catalyst: Run Actions for Active File",
+        "category": "Catalyst"
+      },
+      {
+        "command": "catalyst.showOutput",
+        "title": "Catalyst: Show Output Channel",
+        "category": "Catalyst"
+      }
+    ],
     "configuration": {
       "title": "Catalyst",
       "properties": {
