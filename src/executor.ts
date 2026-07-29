@@ -80,7 +80,7 @@ export class LineBuffer {
  * Spawns a shell process to execute task commands.
  */
 class ShellExecutor implements Executor {
-  private readonly runningProcesses = new Map<
+  private readonly processes = new Map<
     string,
     { child: cp.ChildProcess; wasCancelled: boolean }
   >();
@@ -105,7 +105,7 @@ class ShellExecutor implements Executor {
    */
   public execute(cmd: Command): Promise<void> {
     return new Promise((resolve) => {
-      const existing = this.runningProcesses.get(cmd.name);
+      const existing = this.processes.get(cmd.name);
       if (existing !== undefined) {
         existing.wasCancelled = true;
         logger.send(
@@ -140,7 +140,7 @@ class ShellExecutor implements Executor {
       });
 
       const activeProcess = { child, wasCancelled: false };
-      this.runningProcesses.set(cmd.name, activeProcess);
+      this.processes.set(cmd.name, activeProcess);
 
       let timer: NodeJS.Timeout | undefined;
       let timedOut = false;
@@ -175,8 +175,8 @@ class ShellExecutor implements Executor {
       const cleanup = () => {
         clearTimer();
         flush();
-        if (this.runningProcesses.get(cmd.name) === activeProcess) {
-          this.runningProcesses.delete(cmd.name);
+        if (this.processes.get(cmd.name) === activeProcess) {
+          this.processes.delete(cmd.name);
         }
       };
 
