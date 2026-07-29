@@ -88,4 +88,58 @@ describe('Executor', () => {
     await executor.execute(command);
     assert.strictEqual(shown, true);
   });
+
+  it('handles execution timeout', async () => {
+    let killed = false;
+    let shownMessage: string | undefined;
+
+    const executeCallback = (
+      _cmd: string,
+      _opts: cp.SpawnOptions,
+    ): cp.ChildProcess => {
+      const stdout = new EventEmitter();
+      const stderr = new EventEmitter();
+      const child = Object.assign(new EventEmitter(), {
+        stdout,
+        stderr,
+        kill: (signal?: string) => {
+          if (signal === 'SIGTERM') {
+            killed = true;
+            process.nextTick(() => {
+              child.emit('close', null);
+            });
+          }
+          return true;
+        },
+      }) as unknown as cp.ChildProcess;
+
+      return child;
+    };
+
+    const showErrorMessageCallback: ShowErrorMessageCallback = async (
+      msg: string,
+    ) => {
+      shownMessage = msg;
+      return undefined;
+    };
+
+    const executor: Executor = createExecutor(
+      executeCallback as ExecuteCallback,
+      showErrorMessageCallback,
+    );
+    const action: Action = new Action({
+      name: 'Timeout Task',
+      command: 'sleep 10',
+      timeout: 50,
+    });
+    const resource: Resource = new Resource(vscode.Uri.file('/test'));
+    const command: Command = Command.create(action, resource);
+
+    await executor.execute(command);
+    assert.strictEqual(killed, true);
+    assert.ok(
+      shownMessage?.includes("Action 'Timeout Task' timed out."),
+      `Expected message to contain timeout notice, got: ${shownMessage}`,
+    );
+  });
 });

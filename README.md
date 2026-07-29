@@ -99,6 +99,7 @@ Each action object in `catalyst-run-on-save.actions` supports the following prop
 | `include` | `string[]`           | No       | Glob patterns indicating which files trigger the action. Matches all files if omitted.                                            |
 | `exclude` | `string[]`           | No       | Glob patterns to prevent matching files from triggering the action.                                                               |
 | `shell`   | `string`             | No       | Absolute path to a custom shell executable (e.g., `/bin/zsh`, `powershell.exe`).                                                  |
+| `timeout` | `number`             | No       | Execution timeout limit in milliseconds. The process is terminated if it exceeds this threshold. Omitted or `0` disables timeout. |
 
 > **Note:** Globs are evaluated relative to your workspace root directory. They support both standard file extension patterns (e.g., `**/*.ts`) and directory-specific exclusions.
 
