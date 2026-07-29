@@ -41,17 +41,17 @@
     "commands": [
       {
         "command": "catalyst.toggle",
-        "title": "Catalyst: Toggle Run on Save",
+        "title": "Toggle Execution on Save",
         "category": "Catalyst"
       },
       {
         "command": "catalyst.run",
-        "title": "Catalyst: Run Actions for Active File",
+        "title": "Run Actions for Active File",
         "category": "Catalyst"
       },
       {
         "command": "catalyst.showOutput",
-        "title": "Catalyst: Show Output Channel",
+        "title": "Show Output Channel",
         "category": "Catalyst"
       }
     ],
