@@ -68,9 +68,15 @@ class ShellExecutor implements Executor {
 
       const startTime: number = Date.now();
 
+      const spawnEnv =
+        cmd.options.env !== undefined
+          ? { ...process.env, ...cmd.options.env }
+          : undefined;
+
       const child = this.executeCallback(cmd.commandLine, {
         cwd: cmd.options.cwd,
         shell: cmd.options.shell ?? true,
+        env: spawnEnv,
       });
 
       let timeoutTimer: NodeJS.Timeout | undefined;

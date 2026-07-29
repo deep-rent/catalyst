@@ -4,6 +4,7 @@
  */
 
 import * as assert from 'node:assert';
+import * as path from 'node:path';
 
 import * as vscode from 'vscode';
 
@@ -56,5 +57,49 @@ describe('Action', () => {
 
     const invalidAction = new Action({ command: 'echo test', timeout: -100 });
     assert.strictEqual(invalidAction.timeout, undefined);
+  });
+
+  it('parses and resolves custom cwd and env configuration', () => {
+    const action = new Action({
+      command: 'echo test',
+      cwd: '${workspaceFolder}/custom',
+      env: { testKey: 'bar_${fileBasenameNoExtension}' },
+    });
+    const resource = new Resource(vscode.Uri.file('/workspace/src/file.ts'));
+
+    assert.strictEqual(
+      action.getCwd(resource),
+      path.resolve(resource.workspaceFolder, 'custom'),
+    );
+    assert.deepStrictEqual(action.getEnv(resource), { testKey: 'bar_file' });
+  });
+
+  it('resolves relative cwd against workspaceFolder', () => {
+    const action = new Action({
+      command: 'echo test',
+      cwd: 'relative/subfolder',
+    });
+    const resource = new Resource(vscode.Uri.file('/workspace/src/file.ts'));
+
+    assert.strictEqual(
+      action.getCwd(resource),
+      path.resolve(resource.workspaceFolder, 'relative/subfolder'),
+    );
+  });
+
+  it('handles non-string env values gracefully', () => {
+    const action = new Action({
+      command: 'echo test',
+      env: {
+        numKey: 8080 as unknown as string,
+        boolKey: true as unknown as string,
+      },
+    });
+    const resource = new Resource(vscode.Uri.file('/workspace/src/file.ts'));
+
+    assert.deepStrictEqual(action.getEnv(resource), {
+      numKey: '8080',
+      boolKey: 'true',
+    });
   });
 });

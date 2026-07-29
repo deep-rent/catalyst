@@ -142,4 +142,38 @@ describe('Executor', () => {
       `Expected message to contain timeout notice, got: ${shownMessage}`,
     );
   });
+
+  it('passes custom env options to spawn', async () => {
+    let capturedOptions: cp.SpawnOptions | undefined;
+    const executeCallback = (
+      _cmd: string,
+      opts: cp.SpawnOptions,
+    ): cp.ChildProcess => {
+      capturedOptions = opts;
+      const stdout = new EventEmitter();
+      const stderr = new EventEmitter();
+      const child = Object.assign(new EventEmitter(), {
+        stdout,
+        stderr,
+      }) as unknown as cp.ChildProcess;
+
+      process.nextTick(() => {
+        child.emit('close', 0);
+      });
+
+      return child;
+    };
+
+    const executor: Executor = createExecutor(executeCallback);
+    const action: Action = new Action({
+      name: 'Env Task',
+      command: 'echo 1',
+      env: { testKey: 'testVal' },
+    });
+    const resource: Resource = new Resource(vscode.Uri.file('/test'));
+    const command: Command = Command.create(action, resource);
+
+    await executor.execute(command);
+    assert.strictEqual(capturedOptions?.env?.testKey, 'testVal');
+  });
 });

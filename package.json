@@ -80,6 +80,17 @@
               "timeout": {
                 "type": "number",
                 "description": "Timeout in milliseconds after which the process is terminated."
+              },
+              "cwd": {
+                "type": "string",
+                "description": "Custom working directory for executing the command. Supports variable substitution."
+              },
+              "env": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "description": "Custom environment variables to pass to the spawned process."
               }
             },
             "required": [

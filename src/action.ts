@@ -3,6 +3,8 @@
  * Licensed under the MIT License.
  */
 
+import * as path from 'node:path';
+
 import type { ActionConfig } from './config';
 import { Platform } from './config';
 import type { Matcher } from './matcher';
@@ -33,6 +35,16 @@ export class Action {
   public readonly timeout?: number | undefined;
 
   /**
+   * The optional custom working directory template.
+   */
+  public readonly cwd?: string | undefined;
+
+  /**
+   * The optional custom environment variables map.
+   */
+  public readonly env?: Record<string, string> | undefined;
+
+  /**
    * Creates an action from the configuration and platform.
    *
    * @param config - The settings representing action parameters.
@@ -40,7 +52,8 @@ export class Action {
    * @throws {@link Error} If the command is missing or invalid.
    */
   constructor(config: ActionConfig, platform: Platform = getPlatform()) {
-    const { name, command, include, exclude, shell, timeout } = config;
+    const { name, command, include, exclude, shell, timeout, cwd, env } =
+      config;
 
     this.name = name ?? 'Unknown';
     switch (typeof command) {
@@ -64,6 +77,11 @@ export class Action {
     this.shell = shell;
     this.timeout =
       typeof timeout === 'number' && timeout > 0 ? timeout : undefined;
+    this.cwd = typeof cwd === 'string' && cwd.trim() !== '' ? cwd : undefined;
+    this.env =
+      typeof env === 'object' && env !== null && !Array.isArray(env)
+        ? env
+        : undefined;
   }
 
   /**
@@ -84,6 +102,39 @@ export class Action {
    */
   public getCommand(resource: Resource): string {
     return resource.substitute(this.template);
+  }
+
+  /**
+   * Resolves the effective working directory with variable substitutions applied.
+   *
+   * @param resource - The workspace file metadata variables.
+   * @returns The substituted working directory or workspace folder fallback.
+   */
+  public getCwd(resource: Resource): string {
+    if (this.cwd === undefined) {
+      return resource.workspaceFolder;
+    }
+    const resolved = resource.substitute(this.cwd);
+    return path.isAbsolute(resolved)
+      ? resolved
+      : path.resolve(resource.workspaceFolder, resolved);
+  }
+
+  /**
+   * Resolves custom environment variables with variable substitutions applied to values.
+   *
+   * @param resource - The workspace file metadata variables.
+   * @returns Key-value map of substituted environment variables or `undefined`.
+   */
+  public getEnv(resource: Resource): Record<string, string> | undefined {
+    if (this.env === undefined) {
+      return undefined;
+    }
+    const resolvedEnv: Record<string, string> = {};
+    for (const [key, value] of Object.entries(this.env)) {
+      resolvedEnv[key] = resource.substitute(String(value));
+    }
+    return resolvedEnv;
   }
 }
 

@@ -10,6 +10,7 @@ type Options = {
   cwd: string;
   shell?: string | undefined;
   timeout?: number | undefined;
+  env?: Record<string, string> | undefined;
 };
 
 /**
@@ -38,9 +39,10 @@ export class Command {
    */
   public static create(action: Action, resource: Resource): Command {
     return new Command(action.name, action.getCommand(resource), {
-      cwd: resource.workspaceFolder,
+      cwd: action.getCwd(resource),
       shell: action.shell,
       timeout: action.timeout,
+      env: action.getEnv(resource),
     });
   }
 }

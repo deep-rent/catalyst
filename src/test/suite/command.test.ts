@@ -26,4 +26,18 @@ describe('Command', () => {
     assert.strictEqual(command.options.shell, '/bin/bash');
     assert.strictEqual(command.options.cwd, resource.workspaceFolder);
   });
+
+  it('creates command with custom cwd and env options', () => {
+    const action: Action = new Action({
+      name: 'CustomEnv',
+      command: 'echo 1',
+      cwd: '${workspaceFolder}/sub',
+      env: { testKey: 'testValue' },
+    });
+    const resource: Resource = new Resource(vscode.Uri.file('/foo/test.txt'));
+    const command: Command = Command.create(action, resource);
+
+    assert.strictEqual(command.options.cwd, `${resource.workspaceFolder}/sub`);
+    assert.deepStrictEqual(command.options.env, { testKey: 'testValue' });
+  });
 });
