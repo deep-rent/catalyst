@@ -86,4 +86,20 @@ describe('Action', () => {
       path.resolve(resource.workspaceFolder, 'relative/subfolder'),
     );
   });
+
+  it('handles non-string env values gracefully', () => {
+    const action = new Action({
+      command: 'echo test',
+      env: {
+        numKey: 8080 as unknown as string,
+        boolKey: true as unknown as string,
+      },
+    });
+    const resource = new Resource(vscode.Uri.file('/workspace/src/file.ts'));
+
+    assert.deepStrictEqual(action.getEnv(resource), {
+      numKey: '8080',
+      boolKey: 'true',
+    });
+  });
 });

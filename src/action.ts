@@ -132,7 +132,7 @@ export class Action {
     }
     const resolvedEnv: Record<string, string> = {};
     for (const [key, value] of Object.entries(this.env)) {
-      resolvedEnv[key] = resource.substitute(value);
+      resolvedEnv[key] = resource.substitute(String(value));
     }
     return resolvedEnv;
   }
