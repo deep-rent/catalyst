@@ -192,4 +192,18 @@ describe('LineBuffer', () => {
     buffer.flush();
     assert.deepStrictEqual(lines, ['hello world', 'foo', 'bar']);
   });
+
+  it('handles empty chunks and multiple consecutive newlines', () => {
+    const lines: string[] = [];
+    const buffer = new LineBuffer((line) => lines.push(line));
+
+    buffer.append('');
+    assert.deepStrictEqual(lines, []);
+
+    buffer.append('\n\n');
+    assert.deepStrictEqual(lines, ['', '']);
+
+    buffer.flush();
+    assert.deepStrictEqual(lines, ['', '']);
+  });
 });
