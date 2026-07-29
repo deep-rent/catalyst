@@ -130,7 +130,7 @@ Catalyst contributes interactive commands via the Command Palette (`Cmd+Shift+P`
 
 | Command               | Title                                     | Description                                                                                                |
 | :-------------------- | :---------------------------------------- | :--------------------------------------------------------------------------------------------------------- |
-| `catalyst.toggle`     | **Catalyst: Toggle Run on Save**          | Globally enable or disable automatic execution on file save. Also toggled by clicking the status bar item. |
+| `catalyst.toggle`     | **Catalyst: Toggle Execution on Save**    | Globally enable or disable automatic execution on file save. Also toggled by clicking the status bar item. |
 | `catalyst.run`        | **Catalyst: Run Actions for Active File** | Manually trigger matching run-on-save actions for the active text editor document.                         |
 | `catalyst.showOutput` | **Catalyst: Show Output Channel**         | Open the Catalyst log output channel.                                                                      |
 
