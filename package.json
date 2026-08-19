@@ -163,7 +163,7 @@
     "mocha": "11.8.x",
     "prettier": "3.9.x",
     "typescript": "6.0.x",
-    "typescript-eslint": "8.66.x"
+    "typescript-eslint": "8.67.x"
   },
   "allowScripts": {
     "esbuild@0.28.0": true
